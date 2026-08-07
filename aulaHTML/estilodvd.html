@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>DVD CIMATEC Bouncing Screensaver</title>
+<style>
+  :root{
+    --bg: #05070d;
+    --accent1: #0057ff;
+    --accent2: #ff2e5b;
+    --accent3: #ffb400;
+    --accent4: #16d6a3;
+    --accent5: #a259ff;
+  }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: var(--bg);
+    background-image:
+      radial-gradient(circle at 20% 20%, rgba(255,255,255,0.03), transparent 40%),
+      radial-gradient(circle at 80% 80%, rgba(255,255,255,0.03), transparent 40%);
+  }
+
+  #stage {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+  }
+
+  #logo {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 14px 26px;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.05);
+    border: 2px solid currentColor;
+    color: var(--accent1);
+    box-shadow: 0 0 25px currentColor, inset 0 0 15px rgba(255,255,255,0.05);
+    font-family: 'Segoe UI', Arial, sans-serif;
+    user-select: none;
+    will-change: transform;
+    transition: color 1.2s linear;
+  }
+
+  #logo .senai {
+    font-size: 34px;
+    letter-spacing: 6px;
+    font-weight: 600;
+    opacity: 0.85;
+  }
+
+  #logo .cimatec {
+    font-size: 34px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    line-height: 1;
+    margin-top: 2px;
+  }
+
+  #hint {
+    position: absolute;
+    bottom: 14px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: rgba(255,255,255,0.35);
+    font-family: 'Segoe UI', Arial, sans-serif;
+    font-size: 12px;
+    letter-spacing: 1px;
+  }
+
+  #flash {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: white;
+    opacity: 0;
+  }
+
+  #counter {
+    position: absolute;
+    top: 14px;
+    right: 18px;
+    color: rgba(255,255,255,0.35);
+    font-family: 'Segoe UI', Arial, sans-serif;
+    font-size: 12px;
+    letter-spacing: 1px;
+  }
+</style>
+</head>
+<body>
+
+<div id="stage">
+  <div id="logo">
+    <span class="senai">SENAI</span>
+    <span class="cimatec">CIMATEC</span>
+  </div>
+  <div id="flash"></div>
+  <div id="counter">cantos: 0</div>
+  <div id="hint">tela clássica de DVD — redimensione a janela à vontade</div>
+</div>
+
+<script>
+  const stage = document.getElementById('stage');
+  const logo = document.getElementById('logo');
+  const flash = document.getElementById('flash');
+  const counterEl = document.getElementById('counter');
+
+  // cor muda de forma contínua e devagar (gira o matiz), em vez de piscar RGB a cada quique
+  let hue = Math.floor(Math.random() * 360);
+  const hueStep = 0.12; // graus por frame — quanto menor, mais devagar a cor muda
+
+  let x = Math.random() * 300;
+  let y = Math.random() * 200;
+  let speed = 1.4;
+  let dx = speed;
+  let dy = speed;
+  let corners = 0;
+
+  function setColor() {
+    logo.style.color = `hsl(${hue}, 80%, 58%)`;
+  }
+  setColor();
+
+  function doFlash() {
+    flash.style.transition = 'none';
+    flash.style.opacity = '0.5';
+    requestAnimationFrame(() => {
+      flash.style.transition = 'opacity 0.4s ease-out';
+      flash.style.opacity = '0';
+    });
+  }
+
+  function tick() {
+    const stageW = stage.clientWidth;
+    const stageH = stage.clientHeight;
+    const logoW = logo.offsetWidth;
+    const logoH = logo.offsetHeight;
+
+    x += dx;
+    y += dy;
+
+    let hitEdge = false;
+    let hitCornerNow = false;
+
+    if (x <= 0) {
+      x = 0;
+      dx = Math.abs(dx);
+      hitEdge = true;
+    } else if (x + logoW >= stageW) {
+      x = stageW - logoW;
+      dx = -Math.abs(dx);
+      hitEdge = true;
+    }
+
+    if (y <= 0) {
+      y = 0;
+      dy = Math.abs(dy);
+      hitEdge = true;
+    } else if (y + logoH >= stageH) {
+      y = stageH - logoH;
+      dy = -Math.abs(dy);
+      hitEdge = true;
+    }
+
+    if (hitEdge) {
+      // detecta se bateu bem no canto (perto o suficiente das duas bordas)
+      const nearLeftOrRight = x <= 1 || x + logoW >= stageW - 1;
+      const nearTopOrBottom = y <= 1 || y + logoH >= stageH - 1;
+      if (nearLeftOrRight && nearTopOrBottom) {
+        corners++;
+        counterEl.textContent = 'cantos: ' + corners;
+        doFlash();
+      }
+    }
+
+    hue = (hue + hueStep) % 360;
+    setColor();
+
+    logo.style.transform = `translate(${x}px, ${y}px)`;
+    requestAnimationFrame(tick);
+  }
+
+  requestAnimationFrame(tick);
+</script>
+
+</body>
+</html>
