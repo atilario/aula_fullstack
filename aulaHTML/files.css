@@ -1,0 +1,68 @@
+/* animação de transição de cor para #divi1 */
+@keyframes SENAIS {
+    from {
+        background-color: red;
+    }
+    to {
+        background-color: purple;
+    }
+}
+
+/* animação de cores para #divi2 */
+@keyframes SENAIS2 {
+    0% {
+        background-color: black;
+        color: red;
+    }
+    50% {
+        background-color: yellow;
+        color: green;
+    }
+    75% {
+        background-color: silver;
+        color: goldenrod;
+    }
+    100% {
+        background-color: pink;
+        color: blue;
+    }
+}
+
+/* animação de rotação contínua para hover */
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* estilos básicos comuns entre os elementos */
+#divi1,
+#divi2 {
+    width: 200px;
+    height: 200px;
+    text-align: center;
+    line-height: 200px;
+}
+
+#divi1 {
+    background-color: red;
+    color: black;
+    border-radius: 200px;
+}
+
+#divi2 {
+    background-color: black;
+    color: red;
+    border-radius: 20px;
+    float: right;
+}
+
+/* effecto: girar e alternar cor em #divi1 no hover */
+#divi1:hover {
+    animation: spin 1s linear infinite, SENAIS 500ms infinite alternate;
+}
+
+/* effecto: altera as cores de #divi2 no hover */
+#divi2:hover {
+    animation: SENAIS2 500ms infinite alternate;
+}
