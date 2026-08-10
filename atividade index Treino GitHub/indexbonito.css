@@ -1,0 +1,196 @@
+/* ============================================================
+   VARIÁVEIS GLOBAIS
+   Cores, fonte e tokens reutilizados no arquivo inteiro.
+   Trocar aqui muda a aparência de tudo de uma vez.
+   ============================================================ */
+:root{
+  --bg:#ffffff;         /* fundo da página (atrás do currículo) */
+  --paper:#fdfdfc;       /* fundo do "papel" do currículo em si */
+  --text:#1f2328;        /* cor do texto principal (nome, títulos) */
+  --text-dim:#54596b;    /* cor do texto secundário (descrições) */
+  --text-faint:#8b8f9f;  /* cor do texto mais apagado (datas, legendas) */
+  --accent:#2f6f5e;      /* cor de destaque (títulos de seção, links) */
+  --line:#e2e4ea;        /* cor das linhas finas divisórias */
+  --sans:'Inter', system-ui, -apple-system, sans-serif; /* fonte usada em tudo */
+}
+
+/* Faz padding/border entrarem na largura do elemento, em vez de somar */
+*{box-sizing:border-box;}
+
+/* ---------- corpo da página ---------- */
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--sans);
+  line-height:1.55;         /* espaçamento entre linhas do texto */
+  padding:48px 20px;        /* respiro ao redor do currículo */
+  -webkit-font-smoothing:antialiased; /* deixa a fonte mais suave no Mac/iOS */
+}
+
+/* links: cor de destaque, sem sublinhado até passar o mouse */
+a{color:var(--accent); text-decoration:none;}
+a:hover{text-decoration:underline;}
+
+/* contorno visível ao navegar com Tab (acessibilidade) */
+:focus-visible{outline:2px solid var(--accent); outline-offset:2px;}
+
+/* caixa principal do currículo: centralizada e com largura máxima */
+.resume{
+  max-width:760px;
+  margin:0 auto;
+  background:var(--paper);
+}
+
+/* ============================================================
+   CABEÇALHO (nome + cargo + contato)
+   ============================================================ */
+.header{
+  display:flex;
+  flex-wrap:wrap;               /* quebra linha em telas pequenas */
+  justify-content:space-between; /* nome de um lado, contato do outro */
+  align-items:flex-end;         /* alinha pela base do texto */
+  gap:16px;
+  padding-bottom:22px;
+  border-bottom:3px solid var(--text); /* linha grossa separando o cabeçalho */
+  margin-bottom:30px;
+}
+.header h1{
+  font-size:32px;
+  font-weight:700;
+  margin:0 0 4px;
+  letter-spacing:-0.01em;  /* aproxima um pouco as letras do nome */
+}
+.header .role{
+  font-size:15px;
+  color:var(--text-dim);
+  margin:0;
+}
+
+/* lista de contatos (email, github, linkedin) no canto direito */
+.contact-list{
+  list-style:none;
+  margin:0;
+  padding:0;
+  display:flex;
+  flex-direction:column;  /* um item embaixo do outro */
+  gap:4px;
+  font-size:13.5px;
+  text-align:right;
+}
+.contact-list li{color:var(--text-dim);}
+.contact-list a{color:var(--text);}
+
+/* ============================================================
+   SEÇÕES (Perfil, Formação, Habilidades)
+   ============================================================ */
+.section{
+  margin-bottom:28px;  /* espaço entre uma seção e a próxima */
+}
+
+/* título de cada seção: pequeno, maiúsculo, com linha embaixo */
+.section h2{
+  font-size:12.5px;
+  font-weight:700;
+  letter-spacing:.12em;      /* espaçamento entre letras (efeito "label") */
+  text-transform:uppercase;
+  color:var(--accent);
+  margin:0 0 14px;
+  padding-bottom:6px;
+  border-bottom:1px solid var(--line);
+}
+
+/* texto do parágrafo de "Perfil" */
+.summary{
+  font-size:15px;
+  color:var(--text-dim);
+  margin:0;
+  max-width:64ch;  /* limita a largura da linha pra facilitar a leitura */
+}
+
+/* ============================================================
+   FORMAÇÃO
+   ============================================================ */
+/* linha com nome da instituição + curso, e o período alinhado à direita */
+.edu-item{
+  display:flex;
+  justify-content:space-between;
+  gap:16px;
+  margin-bottom:6px;
+}
+.edu-main strong{font-size:15px; color:var(--text);} /* nome da instituição */
+.edu-main .sub{display:block; font-size:13.5px; color:var(--text-dim); margin-top:2px;} /* nome do curso */
+.edu-period{
+  font-size:13px;
+  color:var(--text-faint);
+  white-space:nowrap;  /* não deixa "6º semestre (atual)" quebrar linha */
+  padding-top:2px;
+}
+
+/* lista do histórico por semestre (sem 1, sem 2, ...) */
+.history{
+  list-style:none;
+  margin:14px 0 0;
+  padding:0;
+  display:flex;
+  flex-direction:column;
+  gap:9px;
+}
+/* cada linha: coluna fixa pro "Sem. X" + coluna flexível pra descrição */
+.history li{
+  display:grid;
+  grid-template-columns:90px 1fr;
+  gap:14px;
+  font-size:13.5px;
+  align-items:baseline;
+}
+.history .sem{
+  color:var(--text-faint);
+  font-size:12.5px;
+  text-transform:uppercase;
+  letter-spacing:.04em;
+}
+.history .cur{color:var(--accent); font-weight:600;}       /* destaca o semestre atual */
+.history .desc{color:var(--text-dim);}
+.history .desc.cur-desc{color:var(--text); font-weight:600;} /* destaca a descrição do semestre atual */
+
+/* ============================================================
+   HABILIDADES
+   ============================================================ */
+/* grade responsiva: quantas colunas couberem, mínimo de 200px cada */
+.skill-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(200px,1fr));
+  gap:18px 24px;
+}
+.skill-cat h3{
+  font-size:13px;
+  font-weight:600;
+  color:var(--text);
+  margin:0 0 8px;
+}
+.skill-cat p{
+  font-size:13.5px;
+  color:var(--text-dim);
+  margin:0;
+}
+
+/* ============================================================
+   IMPRESSÃO
+   Ajustes aplicados só quando a página é impressa (Ctrl+P)
+   ============================================================ */
+@media print{
+  body{padding:0;}          /* tira o respiro extra ao imprimir */
+  .resume{max-width:none;}  /* usa a largura total da folha */
+}
+
+/* ============================================================
+   RESPONSIVO (telas pequenas / celular)
+   ============================================================ */
+@media (max-width:600px){
+  body{padding:30px 16px;}
+  .header{flex-direction:column; align-items:flex-start;} /* empilha nome e contato */
+  .contact-list{text-align:left;}
+  .edu-item{flex-direction:column;} /* empilha instituição e período */
+  .history li{grid-template-columns:70px 1fr;} /* encolhe a coluna do "Sem." */
+}
