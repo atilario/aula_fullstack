@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+const { useState, useEffect, useMemo } = React;
 
 // --- TABELA DE CLASSIFICAÇÃO OFICIAL DO IMC (OMS / MINISTÉRIO DA SAÚDE) ---
 const IMC_CATEGORIES = [
@@ -9,7 +9,6 @@ const IMC_CATEGORIES = [
     min: 0,
     max: 18.49,
     color: '#0284c7',
-    badgeClass: 'underweight',
     advice: 'O peso abaixo do recomendado pode indicar carência nutricional. Recomenda-se orientação de um nutricionista para adequação calórica saudável.',
     risk: 'Possíveis deficiências nutricionais e redução de imunidade.'
   },
@@ -20,7 +19,6 @@ const IMC_CATEGORIES = [
     min: 18.5,
     max: 24.99,
     color: '#10b981',
-    badgeClass: 'normal',
     advice: 'Excelente! Seu índice está na faixa ideal. Continue mantendo uma alimentação equilibrada e a prática regular de atividades físicas.',
     risk: 'Menor risco para doenças crônicas e cardiovasculares.'
   },
@@ -31,7 +29,6 @@ const IMC_CATEGORIES = [
     min: 25.0,
     max: 29.99,
     color: '#f59e0b',
-    badgeClass: 'overweight',
     advice: 'Atenção inicial: pequeno excesso de peso. Pequenas mudanças de hábitos, como caminhadas e redução de açúcares, trazem grandes benefícios.',
     risk: 'Risco moderado para hipertensão, colesterol e diabetes.'
   },
@@ -42,7 +39,6 @@ const IMC_CATEGORIES = [
     min: 30.0,
     max: 34.99,
     color: '#f97316',
-    badgeClass: 'obesity-1',
     advice: 'Importante buscar acompanhamento na unidade de saúde para avaliação geral e plano de cuidado preventivo personalizado.',
     risk: 'Risco elevado de doenças cardiovasculares e metabólicas.'
   },
@@ -53,7 +49,6 @@ const IMC_CATEGORIES = [
     min: 35.0,
     max: 39.99,
     color: '#ef4444',
-    badgeClass: 'obesity-2',
     advice: 'Recomenda-se consulta com equipe multiprofissional (médico, nutricionista e educador físico) para plano terapêutico.',
     risk: 'Risco muito elevado de complicações clínicas crônicas.'
   },
@@ -64,13 +59,12 @@ const IMC_CATEGORIES = [
     min: 40.0,
     max: 100,
     color: '#991b1b',
-    badgeClass: 'obesity-3',
     advice: 'Acompanhamento clínico prioritário e contínuo é fundamental para preservar a saúde e qualidade de vida.',
     risk: 'Risco altíssimo de comorbidades graves associadas.'
   }
 ];
 
-export default function App() {
+function App() {
   // --- ESTADOS ---
   const [formData, setFormData] = useState({
     name: '',
@@ -164,7 +158,7 @@ export default function App() {
       cat => imcCalc >= cat.min && imcCalc <= cat.max
     ) || IMC_CATEGORIES[IMC_CATEGORIES.length - 1];
 
-    // Calcula posição percentual na régua gráfica (de 10 a 45 de IMC)
+    // Calcula posição percentual na régua gráfica (de 12 a 45 de IMC)
     const minScale = 12;
     const maxScale = 45;
     const clampedImc = Math.min(Math.max(imcCalc, minScale), maxScale);
@@ -507,3 +501,7 @@ export default function App() {
     </div>
   );
 }
+
+// Renderização direta no container
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<App />);
