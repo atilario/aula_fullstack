@@ -1,138 +1,42 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="portifolio.css">
-    <title>Portfólio - Átila Leite</title>
+    <meta name="description" content="Portfólio de Átila Leite - Estudante de Engenharia da Computação no SENAI CIMATEC (6º Semestre). Data Science, Machine Learning, Full Stack, Python, C/C++ e Arduino.">
+    <meta name="keywords" content="Átila Leite, Portfólio, Engenharia da Computação, SENAI CIMATEC, React, Data Science, Machine Learning, Full Stack, Python, Arduino">
+    <meta name="author" content="Átila Leite">
+
+    <!-- Open Graph / Redes Sociais -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Portfólio • Átila Leite | Engenharia da Computação">
+    <meta property="og:description" content="Projetos e competências em Ciência de Dados, IA, Full Stack e Sistemas Embarcados.">
+
+    <title>Portfólio • Átila Leite | Engenharia da Computação</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <!-- Folha de Estilos do Design System -->
+    <link rel="stylesheet" href="style.css">
+
+    <!-- React 18 e ReactDOM via CDN -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+
+    <!-- Babel Standalone para transpilação JSX em tempo de execução -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 </head>
 <body>
-    <header id="inicio">
-        <div class="cabecalho">
-            <p class="mini-titulo">PORTFÓLIO</p>
-            <h1>Olá, eu sou <span>Átila Leite</span></h1>
-            <p class="descricao">Estudante de Engenharia da Computação no SENAI CIMATEC, atualmente no 6º semestre.</p>
-            <a href="#projetos" class="botao">Ver meus projetos</a>
-        </div>
-    </header>
+    <!-- Container onde o React monta a aplicação -->
+    <div id="root"></div>
 
-    <main>
-        <section id="sobre">
-            <h2>Sobre mim</h2>
-            <p>Meu nome é Átila Leite e sou estudante do 6º semestre de Engenharia da Computação no SENAI CIMATEC.</p>
-            <p>Atualmente, venho desenvolvendo trabalhos relacionados a Data Science, Data Analytics e Machine Learning, áreas que me interessam principalmente pela possibilidade de utilizar tecnologia e dados para resolver problemas.</p>
-            <p>Também estou estudando desenvolvimento Full Stack, começando pelos fundamentos de HTML e CSS e desenvolvendo meus primeiros projetos para a web.</p>
-            <p>Ao longo da minha formação, já tive contato com diferentes áreas da programação, trabalhando com Python, C e C++, além de projetos com Arduino envolvendo programação, lógica e controle de componentes eletrônicos.</p>
-        </section>
-
-        <section id="tecnologias">
-            <h2>Áreas de interesse</h2>
-            <div class="cards">
-                <div class="card">
-                    <h3>Data Science</h3>
-                    <p>Desenvolvimento de trabalhos utilizando dados para análise e obtenção de informações.</p>
-                </div>
-                <div class="card">
-                    <h3>Data Analytics</h3>
-                    <p>Análise e organização de dados para compreender informações e apoiar a tomada de decisões.</p>
-                </div>
-                <div class="card">
-                    <h3>Machine Learning</h3>
-                    <p>Iniciando estudos de técnicas de aprendizado de máquina e aplicação de modelos em problemas envolvendo dados.</p>
-                </div>
-                <div class="card">
-                    <h3>Full Stack</h3>
-                    <p>Atualmente estudando desenvolvimento web, começando pelos fundamentos de HTML e CSS.</p>
-                </div>
-                <div class="card">
-                    <h3>Programação</h3>
-                    <p>Experiência acadêmica com Python, C e C++, desenvolvendo exercícios e projetos de programação.</p>
-                </div>
-                <div class="card">
-                    <h3>Arduino</h3>
-                    <p>Desenvolvimento de projetos envolvendo programação, LEDs, controle de pinos e componentes eletrônicos.</p>
-                </div>
-            </div>
-        </section>
-
-        <section id="projetos">
-            <h2>Projetos e trabalhos</h2>
-            <div class="projetos">
-                <div class="projeto">
-                    <div class="numero">01</div>
-                    <h3>Data Science e Data Analytics</h3>
-                    <p>Iniciando trabalhos envolvendo análise, organização e interpretação de dados para gerar informações e visualizar resultados.</p>
-                    <span>Data Science</span>
-                </div>
-                <div class="projeto">
-                    <div class="numero">02</div>
-                    <h3>Machine Learning</h3>
-                    <p>Iniciando estudos e trabalhos relacionados a aprendizado de máquina e utilização de dados para desenvolver soluções computacionais.</p>
-                    <span>Machine Learning</span>
-                </div>
-                <div class="projeto">
-                    <div class="numero">03</div>
-                    <h3>Desenvolvimento Web</h3>
-                    <p>Criação de páginas utilizando HTML e CSS, trabalhando com elementos, classes, IDs, estilos, bordas, animações e efeitos de interação.</p>
-                    <span>HTML • CSS</span>
-                </div>
-                <div class="projeto">
-                    <div class="numero">04</div>
-                    <h3>Projetos com Arduino</h3>
-                    <p>Desenvolvimento de projetos utilizando LEDs, controle de posições, repetições, mudanças de direção e componentes eletrônicos.</p>
-                    <span>Arduino • C++</span>
-                </div>
-                <div class="projeto">
-                    <div class="numero">05</div>
-                    <h3>Programação em Python</h3>
-                    <p>Desenvolvimento de exercícios e pequenos programas envolvendo funções, loops, condicionais e lógica de programação.</p>
-                    <span>Python</span>
-                </div>
-                <div class="projeto">
-                    <div class="numero">06</div>
-                    <h3>Programação em C e C++</h3>
-                    <p>Estudos de programação utilizando funções, variáveis, ponteiros, estruturas e lógica para desenvolvimento de soluções.</p>
-                    <span>C • C++</span>
-                </div>
-            </div>
-        </section>
-
-        <section id="aprendizado">
-            <h2>Minha jornada</h2>
-            <div class="linha">
-                <div class="etapa">
-                    <strong>01</strong>
-                    <p>Engenharia da Computação</p>
-                </div>
-                <div class="etapa">
-                    <strong>02</strong>
-                    <p>Programação</p>
-                </div>
-                <div class="etapa">
-                    <strong>03</strong>
-                    <p>Dados</p>
-                </div>
-                <div class="etapa">
-                    <strong>04</strong>
-                    <p>Machine Learning</p>
-                </div>
-                <div class="etapa">
-                    <strong>05</strong>
-                    <p>Full Stack</p>
-                </div>
-            </div>
-        </section>
-
-        <section id="contato">
-            <h2>Contato</h2>
-            <p>Quer conhecer mais sobre meus trabalhos e projetos?</p>
-            <a href="mailto:seuemail@email.com" class="botao">Entrar em contato</a>
-        </section>
-    </main>
-
-    <footer>
-        <p>© 2026 Átila Leite</p>
-        <p>Engenharia da Computação • SENAI CIMATEC</p>
-    </footer>
+    <!-- Aplicação React Modular -->
+    <script type="text/babel" src="app.js"></script>
 </body>
 </html>
