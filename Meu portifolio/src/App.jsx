@@ -1,8 +1,4 @@
-// ==========================================================================
-// PORTFÓLIO ÁTILA LEITE - APLICAÇÃO REACT 18
-// ==========================================================================
-
-const { useState, useEffect, useMemo } = React;
+import React, { useState, useEffect, useMemo } from 'react';
 
 // --- DADOS DA APLICAÇÃO ---
 const portfolioData = {
@@ -211,11 +207,8 @@ const portfolioData = {
   ]
 };
 
-// ==========================================================================
-// COMPONENTES REACT
-// ==========================================================================
+// --- COMPONENTES ---
 
-// --- NAVBAR ---
 function Navbar({ theme, toggleTheme }) {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -274,7 +267,6 @@ function Navbar({ theme, toggleTheme }) {
   );
 }
 
-// --- HERO SECTION ---
 function HeroSection({ personal }) {
   return (
     <section id="inicio" className="hero">
@@ -342,7 +334,6 @@ function HeroSection({ personal }) {
   );
 }
 
-// --- ABOUT SECTION ---
 function AboutSection({ personal }) {
   return (
     <section id="sobre">
@@ -410,7 +401,6 @@ function AboutSection({ personal }) {
   );
 }
 
-// --- SKILLS SECTION ---
 function SkillsSection({ skills }) {
   const [selectedCategory, setSelectedCategory] = useState("Todos");
 
@@ -481,7 +471,6 @@ function SkillsSection({ skills }) {
   );
 }
 
-// --- PROJECTS SECTION & MODAL ---
 function ProjectsSection({ projects }) {
   const [filterCategory, setFilterCategory] = useState("Todos");
   const [searchTerm, setSearchTerm] = useState("");
@@ -573,7 +562,6 @@ function ProjectsSection({ projects }) {
           </div>
         )}
 
-        {/* Modal de Detalhes */}
         {activeProject && (
           <div className="modal-overlay" onClick={() => setActiveProject(null)}>
             <div className="modal-content" onClick={e => e.stopPropagation()}>
@@ -618,7 +606,6 @@ function ProjectsSection({ projects }) {
   );
 }
 
-// --- JOURNEY / TIMELINE SECTION ---
 function JourneySection({ journey }) {
   return (
     <section id="jornada">
@@ -651,7 +638,6 @@ function JourneySection({ journey }) {
   );
 }
 
-// --- CONTACT SECTION ---
 function ContactSection({ personal }) {
   const [formData, setFormData] = useState({ name: "", email: "", message: "" });
   const [submitted, setSubmitted] = useState(false);
@@ -784,7 +770,6 @@ function ContactSection({ personal }) {
   );
 }
 
-// --- FOOTER ---
 function Footer({ personal }) {
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -818,10 +803,8 @@ function Footer({ personal }) {
   );
 }
 
-// ==========================================================================
-// COMPONENTE PRINCIPAL (APP)
-// ==========================================================================
-function App() {
+// --- APP PRINCIPAL ---
+export default function App() {
   const [theme, setTheme] = useState(() => {
     return localStorage.getItem("theme_preference") || "dark";
   });
@@ -853,7 +836,3 @@ function App() {
     </div>
   );
 }
-
-// Renderização na raiz
-const root = ReactDOM.createRoot(document.getElementById("root"));
-root.render(<App />);
