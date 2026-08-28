@@ -1,0 +1,102 @@
+const { useState } = React;
+
+function App() {
+  // Estado para armazenar o texto digitado no input
+  const [nome, setNome] = useState('');
+
+  // Estado para armazenar a lista de participantes
+  const [participantes, setParticipantes] = useState([
+    'Ana Souza',
+    'Lucas Ferreira',
+    'Mariana Lima'
+  ]);
+
+  // Estado para mensagens de validação
+  const [erro, setErro] = useState('');
+
+  // Função para adicionar um novo participante
+  function adicionarParticipante(e) {
+    e.preventDefault();
+
+    // Impede o cadastro de nomes vazios
+    if (nome.trim() === '') {
+      setErro('Por favor, digite o nome do participante.');
+      return;
+    }
+
+    // Adiciona o novo nome na lista
+    setParticipantes([...participantes, nome.trim()]);
+
+    // Limpa o campo de texto e o erro
+    setNome('');
+    setErro('');
+  }
+
+  // Função para excluir um participante pelo índice
+  function removerParticipante(indexParaRemover) {
+    const novaLista = participantes.filter((_, index) => index !== indexParaRemover);
+    setParticipantes(novaLista);
+  }
+
+  return (
+    <div className="container">
+      <h1>Mostra de Tecnologia</h1>
+      <p className="subtitulo">Controle e cadastro de participantes do evento</p>
+
+      {/* Formulário de cadastro */}
+      <form onSubmit={adicionarParticipante} className="form-cadastro">
+        <input
+          type="text"
+          placeholder="Digite o nome do participante..."
+          value={nome}
+          onChange={(e) => {
+            setNome(e.target.value);
+            if (erro) setErro('');
+          }}
+          className="input-nome"
+        />
+        <button type="submit" className="btn-adicionar">
+          Cadastrar
+        </button>
+      </form>
+
+      {/* Exibição de erro se o campo estiver vazio */}
+      {erro && <p className="mensagem-erro">{erro}</p>}
+
+      {/* Cabeçalho com o total em tempo real */}
+      <div className="info-header">
+        <h2>Participantes Cadastrados</h2>
+        <span className="total-badge">Total: {participantes.length}</span>
+      </div>
+
+      {/* Lista de participantes */}
+      {participantes.length === 0 ? (
+        <p className="lista-vazia">Nenhum participante cadastrado no momento.</p>
+      ) : (
+        <ul className="lista-nomes">
+          {participantes.map((item, index) => (
+            <li key={index} className="item-participante">
+              <span className="nome-texto">
+                {index + 1}. {item}
+              </span>
+              <button
+                type="button"
+                onClick={() => removerParticipante(index)}
+                className="btn-excluir"
+                title="Excluir participante"
+              >
+                Excluir
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+
+      <p className="rodape">Aplicação React • lista-participantes</p>
+    </div>
+  );
+}
+
+// Montagem no elemento raiz
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<App />);

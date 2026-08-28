@@ -1,0 +1,163 @@
+/* Estilos Simples da Lista de Participantes */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+  background-color: #f0f2f5;
+  color: #333;
+  padding: 40px 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.container {
+  background-color: #ffffff;
+  width: 100%;
+  max-width: 550px;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+h1 {
+  font-size: 24px;
+  color: #1e3a8a;
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.subtitulo {
+  text-align: center;
+  color: #666;
+  font-size: 14px;
+  margin-bottom: 25px;
+}
+
+/* Formulário */
+.form-cadastro {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.input-nome {
+  flex: 1;
+  padding: 12px 15px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 15px;
+  outline: none;
+}
+
+.input-nome:focus {
+  border-color: #2563eb;
+}
+
+.btn-adicionar {
+  background-color: #2563eb;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 6px;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.btn-adicionar:hover {
+  background-color: #1d4ed8;
+}
+
+.mensagem-erro {
+  color: #dc2626;
+  font-size: 13px;
+  margin-bottom: 15px;
+}
+
+/* Informações e Contador */
+.info-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 10px;
+  margin-bottom: 15px;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.info-header h2 {
+  font-size: 16px;
+  color: #4b5563;
+}
+
+.total-badge {
+  background-color: #dbeafe;
+  color: #1e40af;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+/* Lista de Participantes */
+.lista-nomes {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.item-participante {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 15px;
+  background-color: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  transition: 0.2s;
+}
+
+.item-participante:hover {
+  background-color: #f3f4f6;
+}
+
+.nome-texto {
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.btn-excluir {
+  background-color: #fee2e2;
+  color: #dc2626;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.btn-excluir:hover {
+  background-color: #ef4444;
+  color: white;
+}
+
+.lista-vazia {
+  text-align: center;
+  color: #9ca3af;
+  font-size: 14px;
+  padding: 20px 0;
+}
+
+.rodape {
+  margin-top: 25px;
+  text-align: center;
+  font-size: 12px;
+  color: #9ca3af;
+}
