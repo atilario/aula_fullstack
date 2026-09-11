@@ -83,7 +83,7 @@ function Contato() {
 
             {enviado && (
               <div className="alerta-sucesso" role="alert">
-                ✓ Mensagem registrada com sucesso na interface! Obrigado pelo contato.
+                Mensagem enviada com sucesso. Obrigado pelo contato!
               </div>
             )}
           </form>

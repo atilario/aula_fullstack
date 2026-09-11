@@ -9,7 +9,7 @@ function Cabecalho({ tema, alternarTema }) {
     <header className="cabecalho">
       <div className="container cabecalho-conteudo">
         <a href="#inicio" className="marca" onClick={fecharMenu}>
-          <span className="marca-icone">⚡</span>
+          <span className="marca-icone">AL</span>
           <div>
             <strong>Átila Leite</strong>
             <small>Engenharia da Computação • SENAI CIMATEC</small>
@@ -31,7 +31,7 @@ function Cabecalho({ tema, alternarTema }) {
             aria-label={`Alternar para tema ${tema === "dark" ? "claro" : "escuro"}`}
             title="Alternar tema claro/escuro"
           >
-            {tema === "dark" ? "☀️ Modo Claro" : "🌙 Modo Escuro"}
+            {tema === "dark" ? "Tema Claro" : "Tema Escuro"}
           </button>
 
           <button

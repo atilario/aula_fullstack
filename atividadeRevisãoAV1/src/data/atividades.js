@@ -293,7 +293,8 @@ export const atividades = [
     status: "Concluída",
     descricao: "Documentação técnica completa do projeto para desenvolvedores e avaliadores.",
     aprendizagem: "Estruturação de README.md contendo título, descrição, tecnologias, instruções de instalação/execução, estrutura de pastas e links de deploy.",
-    evidencia: "Card 27 apontando para o arquivo README.md estruturado na raiz do repositório.",
+    evidencia: "Card 27 apontando para o arquivo README.md estruturado na raiz do projeto.",
+    link: "https://github.com/atilario/aula_fullstack/tree/main/atividadeRevisãoAV1#readme",
     commitSugerido: "docs: criar README do projeto"
   },
   {
@@ -315,7 +316,8 @@ export const atividades = [
     status: "Concluída",
     descricao: "Vinculação do repositório local a uma plataforma remota de controle de versão (GitHub).",
     aprendizagem: "Comandos git remote add origin, git push -u origin main e envio de tags para disponibilização pública do código-fonte.",
-    evidencia: "Card 29 contendo campos e instruções para associação do repositório remoto no GitHub.",
+    evidencia: "Card 29 com o repositório remoto publicado e acessível no GitHub: https://github.com/atilario/aula_fullstack/tree/main/atividadeRevisãoAV1",
+    link: "https://github.com/atilario/aula_fullstack/tree/main/atividadeRevisãoAV1",
     commitSugerido: ": publicar repositorio remoto"
   },
   {
@@ -326,7 +328,8 @@ export const atividades = [
     status: "Concluída",
     descricao: "Deploy contínuo e validação final da aplicação em ambiente público de produção na Vercel.",
     aprendizagem: "Importação do repositório na Vercel, validação do build com Vite e checklist completo de funcionalidades aprovadas em janela anônima.",
-    evidencia: "Card 30 com checklist de testes aprovados (menu, filtros, busca, modal, formulário, responsividade) e link de publicação.",
+    evidencia: "Card 30 com a aplicação publicada e validada na Vercel: https://aula-fullstack-gamma.vercel.app",
+    link: "https://aula-fullstack-gamma.vercel.app",
     commitSugerido: "docs: adicionar URL da aplicacao publicada"
   }
 ];

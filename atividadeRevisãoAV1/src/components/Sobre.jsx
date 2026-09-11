@@ -31,11 +31,11 @@ function Sobre() {
             </ul>
 
             <div className="sobre-links">
-              <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="botao-link">
-                GitHub
+              <a href="https://github.com/atilario/aula_fullstack/tree/main/atividadeRevisãoAV1" target="_blank" rel="noopener noreferrer" className="botao-link">
+                Repositório GitHub
               </a>
-              <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="botao-link">
-                LinkedIn
+              <a href="https://aula-fullstack-gamma.vercel.app" target="_blank" rel="noopener noreferrer" className="botao-link">
+                Aplicação na Vercel
               </a>
               <a href="#contato" className="botao-link secundario">
                 Entrar em Contato

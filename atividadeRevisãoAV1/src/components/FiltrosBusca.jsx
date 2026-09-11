@@ -15,7 +15,7 @@ function FiltrosBusca({
           id="campo-busca"
           type="text"
           className="campo-busca"
-          placeholder="🔍 Buscar por título, descrição ou número (ex: 05, Git, Flexbox)..."
+          placeholder="Buscar por título, descrição ou número (ex: 05, Git, Flexbox)..."
           value={busca}
           onChange={(e) => setBusca(e.target.value)}
         />

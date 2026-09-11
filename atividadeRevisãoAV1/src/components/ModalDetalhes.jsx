@@ -16,7 +16,7 @@ function ModalDetalhes({ atividade, onFechar }) {
 
   if (!atividade) return null;
 
-  const { numero, titulo, tecnologia, status, descricao, aprendizagem, evidencia, commitSugerido } = atividade;
+  const { numero, titulo, tecnologia, status, descricao, aprendizagem, evidencia, commitSugerido, link } = atividade;
 
   return (
     <div className="modal-overlay" onClick={onFechar} role="dialog" aria-modal="true" aria-labelledby="modal-titulo">
@@ -53,21 +53,32 @@ function ModalDetalhes({ atividade, onFechar }) {
           </div>
 
           <div className="modal-secao evidencia-box">
-            <strong>🔍 Evidência verificável na aplicação:</strong>
+            <strong>Evidência verificável na aplicação:</strong>
             <p>{evidencia}</p>
           </div>
 
           {commitSugerido && (
             <div className="modal-secao commit-box">
-              <strong>📝 Commit correspondente sugerido:</strong>
+              <strong>Commit correspondente sugerido:</strong>
               <code>{commitSugerido}</code>
             </div>
           )}
         </div>
 
         <div className="modal-rodape">
+          {link && (
+            <a
+              href={link}
+              target={link.startsWith("http") ? "_blank" : "_self"}
+              rel="noopener noreferrer"
+              className="botao-primario"
+              style={{ marginRight: "10px", display: "inline-block" }}
+            >
+              Acessar link da atividade →
+            </a>
+          )}
           <button type="button" className="botao-secundario" onClick={onFechar}>
-            Fechar Detalhes
+            Fechar
           </button>
         </div>
       </div>
