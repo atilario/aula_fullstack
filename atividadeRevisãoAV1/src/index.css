@@ -493,8 +493,34 @@ button {
 .card-descricao {
   font-size: 0.92rem;
   color: var(--cor-texto-suave);
-  margin-bottom: 18px;
+  margin-bottom: 12px;
   flex-grow: 1;
+}
+
+.card-commit-info {
+  background-color: var(--cor-fundo-alt);
+  padding: 6px 10px;
+  border-radius: 6px;
+  margin-bottom: 14px;
+  border-left: 3px solid var(--cor-primaria);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.card-commit-info small {
+  font-size: 0.72rem;
+  color: var(--cor-texto-suave);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-weight: 600;
+}
+
+.card-commit-info code {
+  font-family: var(--fonte-mono);
+  font-size: 0.78rem;
+  color: var(--cor-texto);
+  word-break: break-word;
 }
 
 .card-rodape {

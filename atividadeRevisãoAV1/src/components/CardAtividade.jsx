@@ -1,5 +1,5 @@
 function CardAtividade({ atividade, onVerDetalhes }) {
-  const { numero, titulo, descricao, tecnologia, status } = atividade;
+  const { numero, titulo, descricao, tecnologia, status, commitSugerido } = atividade;
 
   const getStatusClass = (st) => {
     if (st === "Concluída") return "status-concluida";
@@ -16,6 +16,13 @@ function CardAtividade({ atividade, onVerDetalhes }) {
 
       <h3 className="card-titulo">{titulo}</h3>
       <p className="card-descricao">{descricao}</p>
+
+      {commitSugerido && (
+        <div className="card-commit-info">
+          <small>Commit sugerido:</small>
+          <code>{commitSugerido}</code>
+        </div>
+      )}
 
       <div className="card-rodape">
         <span className="card-tech">{tecnologia}</span>
