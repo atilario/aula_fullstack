@@ -1,4 +1,5 @@
 function CardAtividade({ atividade, onVerDetalhes }) {
+  const { numero, titulo, descricao, tecnologia, status } = atividade;
   const { numero, titulo, descricao, tecnologia, status, commitSugerido } = atividade;
 
   const getStatusClass = (st) => {
