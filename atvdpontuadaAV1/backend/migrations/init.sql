@@ -77,8 +77,8 @@ CREATE TABLE IF NOT EXISTS resultados_ranking (
 -- Hash bcrypt 10 rounds para 'admin123'
 INSERT INTO usuarios (nome, email, senha_hash, perfil)
 VALUES 
-('Administrador CIMATEC', 'admin@cimatec.br', '$2b$10$epR3YI9zH5q.67xQd71Zve9pG4wB4g2s3rPz46gL98gQkK7s5t.yG', 'admin'),
-('Pesquisador de Energia', 'pesquisador@cimatec.br', '$2b$10$epR3YI9zH5q.67xQd71Zve9pG4wB4g2s3rPz46gL98gQkK7s5t.yG', 'pesquisador')
+('Administrador CIMATEC', 'admin@cimatec.br', '$2a$10$xu6XlMFBdpJpv3Kfo/0AlePRXSDWucyWhxFq5OffHUYBZlX5pI57u', 'admin'),
+('Pesquisador de Energia', 'pesquisador@cimatec.br', '$2a$10$xu6XlMFBdpJpv3Kfo/0AlePRXSDWucyWhxFq5OffHUYBZlX5pI57u', 'pesquisador')
 ON CONFLICT (email) DO NOTHING;
 
 -- Critérios Oficiais (Capítulo 7.1 do Roteiro TOPSIS)

@@ -1,0 +1,58 @@
+name: CI / Testes Automatizados TOPSIS
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  backend-tests:
+    name: Backend Testes & Cobertura (Jest)
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: topsis_energia
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout Código
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: atvdpontuadaAV1/backend/package-lock.json
+
+      - name: Inicializar Schema PostgreSQL
+        run: |
+          sudo apt-get install -y postgresql-client
+          PGPASSWORD=postgres psql -h localhost -U postgres -d topsis_energia -f atvdpontuadaAV1/backend/migrations/init.sql
+
+      - name: Instalar Dependências Backend
+        working-directory: atvdpontuadaAV1/backend
+        run: npm ci
+
+      - name: Executar Testes Unitários e Integração
+        working-directory: atvdpontuadaAV1/backend
+        env:
+          DB_HOST: localhost
+          DB_PORT: 5432
+          DB_USER: postgres
+          DB_PASSWORD: postgres
+          DB_NAME: topsis_energia
+          JWT_SECRET: ci_secret_key_testing_123
+        run: npm test
