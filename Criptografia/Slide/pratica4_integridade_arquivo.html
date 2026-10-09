@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prática 4 - Integridade de Arquivo no Navegador</title>
+    <style>
+        :root {
+            --bg: #0b0f19;
+            --card: #151f32;
+            --primary: #38bdf8;
+            --border: #223249;
+            --text: #f8fafc;
+            --text-muted: #94a3b8;
+            --success: #34d399;
+            --danger: #f87171;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 2rem 1rem;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 900px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        h1, h2 {
+            color: var(--primary);
+            margin-top: 0;
+        }
+
+        .dropzone {
+            border: 2px dashed var(--border);
+            border-radius: 12px;
+            padding: 2.5rem 1rem;
+            text-align: center;
+            background: #090d16;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .dropzone:hover {
+            border-color: var(--primary);
+            background: #0d1524;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .file-info-card {
+            background: #090d16;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.2rem;
+            margin-top: 1.5rem;
+            display: none;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #1a2638;
+            font-size: 0.95rem;
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+
+        .hash-tag {
+            font-family: monospace;
+            color: var(--success);
+            word-break: break-all;
+            background: #0f172a;
+            padding: 0.6rem;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+        }
+
+        .compare-section {
+            margin-top: 2rem;
+            border-top: 1px solid var(--border);
+            padding-top: 1.5rem;
+        }
+
+        .callout {
+            background: #0c1424;
+            border-left: 4px solid var(--primary);
+            padding: 1.2rem 1.5rem;
+            border-radius: 0 8px 8px 0;
+            line-height: 1.6;
+            margin-top: 1.5rem;
+            color: #cbd5e1;
+            font-size: 0.95rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h1>Prática 4 — Integridade de Arquivo no Navegador</h1>
+            <p style="color: var(--text-muted);">Selecione qualquer arquivo local para ler os bytes como <code>ArrayBuffer</code> e calcular o SHA-256 nativamente:</p>
+
+            <label class="dropzone" for="fileInput">
+                <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">📁</div>
+                <strong>Clique aqui para selecionar um arquivo</strong>
+                <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.4rem;">PDF, TXT, imagem, áudio ou qualquer formato</p>
+                <input type="file" id="fileInput" onchange="processarArquivo(this.files[0], 'principal')">
+            </label>
+
+            <!-- Card de detalhes do arquivo -->
+            <div id="cardDetalhes" class="file-info-card">
+                <div class="info-row">
+                    <span style="color: var(--text-muted);">Nome do Arquivo:</span>
+                    <strong id="nomeArquivo">-</strong>
+                </div>
+                <div class="info-row">
+                    <span style="color: var(--text-muted);">Tamanho:</span>
+                    <strong id="tamanhoArquivo">-</strong>
+                </div>
+                <div class="info-row">
+                    <span style="color: var(--text-muted);">Resumo SHA-256 (calculado sobre ArrayBuffer):</span>
+                    <div class="hash-tag" id="hashArquivo">-</div>
+                </div>
+            </div>
+
+            <!-- Seção de Comparação com Cópia Alterada -->
+            <div class="compare-section">
+                <h2>Teste Comparativo: Cópia do Arquivo</h2>
+                <p style="color: var(--text-muted);">Envie uma cópia do arquivo (ou versão alterada) para checar se a integridade é mantida ou corrompida:</p>
+
+                <label class="dropzone" for="fileCompare" style="padding: 1.5rem 1rem;">
+                    <strong>Selecionar segundo arquivo para comparação</strong>
+                    <input type="file" id="fileCompare" onchange="processarArquivo(this.files[0], 'comparacao')">
+                </label>
+
+                <div id="resultadoComparativo" style="margin-top: 1rem; display: none;"></div>
+            </div>
+
+            <!-- Resposta à questão do Slide 35 -->
+            <div class="callout">
+                <strong style="color: var(--primary);">❓ Por que comparar somente o nome do arquivo ou o tamanho não é suficiente para verificar integridade?</strong><br>
+                Porque é trivial para qualquer atacante ou falha de sistema manter exatamente o mesmo nome e o mesmo número exato de bytes adulterando o conteúdo interno:<br>
+                1. <strong>Substituição de dados sem alterar tamanho:</strong> Trocar uma conta bancária de 8 dígitos por outra com os mesmos 8 dígitos mantém o tamanho do arquivo em bytes perfeitamente idêntico.<br>
+                2. <strong>Ataques em binários/código:</strong> Modificar instruções de uma aplicação ou injetar malware preenchendo o restante com bytes nulos (padding) preserva o tamanho exato.<br>
+                Portanto, somente uma função criptográfica com alta resistência a colisões e efeito avalanche (como SHA-256) garante que cada bit interno permaneceu inalterado.
+            </div>
+        </div>
+    </div>
+
+    <script src="pratica4_integridade_arquivo.js"></script>
+    <script>
+        let hashOriginal = null;
+
+        async function processarArquivo(arquivo, tipo) {
+            if (!arquivo) return;
+
+            const arrayBuffer = await arquivo.arrayBuffer();
+            const hash = await calcularHashArrayBuffer(arrayBuffer);
+
+            if (tipo === 'principal') {
+                hashOriginal = hash;
+                document.getElementById("nomeArquivo").textContent = arquivo.name;
+                document.getElementById("tamanhoArquivo").textContent = `${arquivo.size.toLocaleString('pt-BR')} bytes (${(arquivo.size / 1024).toFixed(2)} KB)`;
+                document.getElementById("hashArquivo").textContent = hash;
+                document.getElementById("cardDetalhes").style.display = "block";
+            } else {
+                const box = document.getElementById("resultadoComparativo");
+                box.style.display = "block";
+
+                const ehIdentico = hashOriginal && (hashOriginal === hash);
+                box.innerHTML = `
+                    <div style="background: #090d16; border: 1px solid var(--border); border-radius: 8px; padding: 1rem;">
+                        <div><strong>Arquivo 2:</strong> ${arquivo.name} (${arquivo.size} bytes)</div>
+                        <div class="hash-tag" style="margin: 0.5rem 0;">${hash}</div>
+                        <div style="font-weight: bold; color: ${ehIdentico ? 'var(--success)' : 'var(--danger)'};">
+                            ${ehIdentico ? '✔ ARQUIVOS IDÊNTICOS (Integridade 100% preservada)' : '✖ ARQUIVO ALTERADO / CORROMPIDO (Hashes divergentes)'}
+                        </div>
+                    </div>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>

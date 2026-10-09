@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prática 3 - Verificador de Integridade</title>
+    <style>
+        :root {
+            --bg: #090d16;
+            --card: #141d2e;
+            --primary: #38bdf8;
+            --border: #223249;
+            --text: #f8fafc;
+            --text-muted: #94a3b8;
+            --success-bg: rgba(16, 185, 129, 0.15);
+            --success-text: #34d399;
+            --danger-bg: rgba(239, 68, 68, 0.15);
+            --danger-text: #f87171;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 2rem 1rem;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 900px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        h1, h2 {
+            color: var(--primary);
+            margin-top: 0;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        @media (max-width: 700px) {
+            .grid-2 { grid-template-columns: 1fr; }
+        }
+
+        label {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+        }
+
+        textarea {
+            width: 100%;
+            height: 120px;
+            padding: 0.8rem 1rem;
+            background: #090d16;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: #fff;
+            font-family: inherit;
+            font-size: 0.95rem;
+            resize: vertical;
+            outline: none;
+            box-sizing: border-box;
+        }
+
+        textarea:focus {
+            border-color: var(--primary);
+        }
+
+        .meta-tag {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 0.4rem;
+        }
+
+        .hash-preview {
+            background: #090d16;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 0.6rem 0.8rem;
+            font-family: monospace;
+            font-size: 0.8rem;
+            color: #38bdf8;
+            word-break: break-all;
+            margin-top: 0.5rem;
+        }
+
+        .status-banner {
+            padding: 1.2rem;
+            border-radius: 10px;
+            font-size: 1.2rem;
+            font-weight: 800;
+            text-align: center;
+            letter-spacing: 0.05em;
+            transition: all 0.3s;
+            margin-top: 1rem;
+        }
+
+        .status-banner.confirmada {
+            background: var(--success-bg);
+            color: var(--success-text);
+            border: 1px solid var(--success-text);
+        }
+
+        .status-banner.alterado {
+            background: var(--danger-bg);
+            color: var(--danger-text);
+            border: 1px solid var(--danger-text);
+        }
+
+        .cenarios-btns {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-bottom: 1.5rem;
+        }
+
+        .btn-quick {
+            background: #1e293b;
+            color: var(--primary);
+            border: 1px solid var(--border);
+            padding: 0.5rem 0.9rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+
+        .btn-quick:hover {
+            background: var(--primary);
+            color: #090d16;
+        }
+
+        .callout {
+            background: #0c1424;
+            border-left: 4px solid var(--primary);
+            padding: 1.2rem 1.5rem;
+            border-radius: 0 8px 8px 0;
+            line-height: 1.6;
+            margin-top: 1.5rem;
+            color: #cbd5e1;
+            font-size: 0.95rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h1>Prática 3 — Verificador de Integridade</h1>
+            <p style="color: var(--text-muted);">Teste rapidamente os cenários de alteração propostos no slide 34:</p>
+
+            <div class="cenarios-btns">
+                <button class="btn-quick" onclick="carregarCenario('espaco')">1. Espaço Extra no Final</button>
+                <button class="btn-quick" onclick="carregarCenario('caixa')">2. Maiúscula vs Minúscula</button>
+                <button class="btn-quick" onclick="carregarCenario('acento')">3. Acentuação (Bytes UTF-8)</button>
+                <button class="btn-quick" onclick="carregarCenario('quebra')">4. Quebra de Linha (CRLF vs LF)</button>
+                <button class="btn-quick" onclick="carregarCenario('identico')">✔ Conteúdos Idênticos</button>
+            </div>
+
+            <div class="grid-2">
+                <div>
+                    <label for="orig">Conteúdo Original:</label>
+                    <textarea id="orig" oninput="executarVerificacao()">Documento Oficial de Engenharia 2026</textarea>
+                    <div class="meta-tag" id="metaOrig">Bytes: 0 | Caracteres: 0</div>
+                    <div class="hash-preview" id="hashOrig"></div>
+                </div>
+
+                <div>
+                    <label for="receb">Conteúdo Recebido:</label>
+                    <textarea id="receb" oninput="executarVerificacao()">Documento Oficial de Engenharia 2026</textarea>
+                    <div class="meta-tag" id="metaReceb">Bytes: 0 | Caracteres: 0</div>
+                    <div class="hash-preview" id="hashReceb"></div>
+                </div>
+            </div>
+
+            <div id="statusIntegridade" class="status-banner confirmada">
+                INTEGRIDADE CONFIRMADA
+            </div>
+
+            <!-- Explicação sobre os riscos de normalização sem especificação -->
+            <div class="callout">
+                <strong style="color: var(--primary);">⚠️ Por que normalizar dados sem especificação formal é perigoso?</strong><br>
+                O hash criptográfico opera rigorosamente sobre a <strong>sequência binária exata de bytes</strong>. Se um sistema aplicar "trim()" ou converter para minúsculas de forma invisível para "facilitar", ele poderá mascarar fraudes (ex: um espaço em código pode mudar a semântica de um script, ou um caractere invisível pode injetar código malicioso). Por outro lado, se a normalização não for padronizada entre remetente e destinatário, sistemas que usam fins de linha diferentes (ex.: Windows `\r\n` vs Linux `\n`) rejeitarão indevidamente documentos válidos. A regra de ouro é: <em>a representação canônica deve ser explicitamente acordada antes do cálculo do hash</em>.
+            </div>
+        </div>
+    </div>
+
+    <script src="pratica3_verificador_integridade.js"></script>
+    <script>
+        const cenarios = {
+            espaco: { o: "Contrato assinado", r: "Contrato assinado " },
+            caixa: { o: "SenhaForte2026", r: "senhaforte2026" },
+            acento: { o: "computacao", r: "computação" },
+            quebra: { o: "Linha 1\nLinha 2", r: "Linha 1\r\nLinha 2" },
+            identico: { o: "Texto idêntico e íntegro", r: "Texto idêntico e íntegro" }
+        };
+
+        function carregarCenario(tipo) {
+            document.getElementById("orig").value = cenarios[tipo].o;
+            document.getElementById("receb").value = cenarios[tipo].r;
+            executarVerificacao();
+        }
+
+        async function executarVerificacao() {
+            const oVal = document.getElementById("orig").value;
+            const rVal = document.getElementById("receb").value;
+
+            const res = await verificarIntegridade(oVal, rVal);
+
+            document.getElementById("metaOrig").textContent = `Desafio: ${res.original.quantidadeBytes} bytes UTF-8 | ${res.original.quantidadeCaracteres} caracteres`;
+            document.getElementById("hashOrig").textContent = `Hash: ${res.original.hash}`;
+
+            document.getElementById("metaReceb").textContent = `Desafio: ${res.recebido.quantidadeBytes} bytes UTF-8 | ${res.recebido.quantidadeCaracteres} caracteres`;
+            document.getElementById("hashReceb").textContent = `Hash: ${res.recebido.hash}`;
+
+            const banner = document.getElementById("statusIntegridade");
+            banner.textContent = res.status;
+            if (res.ehValido) {
+                banner.className = "status-banner confirmada";
+            } else {
+                banner.className = "status-banner alterado";
+            }
+        }
+
+        executarVerificacao();
+    </script>
+</body>
+</html>

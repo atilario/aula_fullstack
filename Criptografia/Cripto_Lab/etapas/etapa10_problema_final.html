@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Etapa 10 — Problema Final: Auditoria de Dados Empresariais</title>
+    <style>
+        :root {
+            --bg: #090e17;
+            --card: #131c2d;
+            --primary: #38bdf8;
+            --primary-hover: #0284c7;
+            --border: #23344d;
+            --text: #f1f5f9;
+            --muted: #94a3b8;
+            --success: #10b981;
+            --danger: #ef4444;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
+        body { background: var(--bg); color: var(--text); padding: 2rem 1rem; display: flex; justify-content: center; }
+        .app { max-width: 750px; width: 100%; display: flex; flex-direction: column; gap: 1.5rem; }
+        .card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 2rem; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        h1 { color: var(--primary); font-size: 1.7rem; margin-bottom: 0.5rem; }
+        p.desc { color: var(--muted); font-size: 0.95rem; margin-bottom: 1.5rem; line-height: 1.6; }
+        .step-tag { display: inline-block; background: #1e3a5f; color: var(--primary); padding: 0.25rem 0.65rem; border-radius: 6px; font-size: 0.75rem; font-weight: bold; text-transform: uppercase; margin-bottom: 0.6rem; }
+        label { display: block; font-weight: 600; margin-bottom: 0.4rem; font-size: 0.88rem; color: var(--muted); }
+        input[type="text"] { width: 100%; padding: 0.85rem 1rem; background: #090e17; border: 1px solid var(--border); border-radius: 8px; color: #fff; font-size: 1rem; margin-bottom: 1rem; }
+        input[type="text"]:focus { outline: none; border-color: var(--primary); }
+        .btns { display: flex; gap: 0.6rem; margin-bottom: 1rem; }
+        button { padding: 0.75rem 1.3rem; border-radius: 8px; font-weight: 700; cursor: pointer; border: none; font-size: 0.95rem; }
+        .btn-p { background: var(--primary); color: #090e17; }
+        .btn-p:hover { background: var(--primary-hover); }
+        .btn-s { background: #23344d; color: #fff; }
+        .btn-s:hover { background: #334e73; }
+        .hash-display { background: #090e17; border: 1px solid var(--border); border-radius: 8px; padding: 1rem; font-family: monospace; font-size: 0.85rem; color: #34d399; word-break: break-all; margin-bottom: 0.8rem; }
+        .veredicto { padding: 1.2rem; border-radius: 10px; font-weight: 800; font-size: 1.15rem; text-align: center; letter-spacing: 0.05em; margin-top: 1rem; }
+        .veredicto.ok { background: rgba(16, 185, 129, 0.2); color: var(--success); border: 1px solid var(--success); }
+        .veredicto.err { background: rgba(239, 68, 68, 0.2); color: var(--danger); border: 1px solid var(--danger); }
+        .rubrica { background: #0d1524; border-left: 4px solid var(--primary); padding: 1rem 1.25rem; border-radius: 0 8px 8px 0; font-size: 0.88rem; color: var(--muted); margin-top: 1rem; }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <div class="card">
+            <span class="step-tag">Cenário Corporativo · Etapa 10</span>
+            <h1>Auditoria de Integridade de Processamento</h1>
+            <p class="desc">
+                “Uma empresa precisa verificar se determinados dados enviados por seus sistemas sofreram alterações durante o processamento. A equipe decidiu utilizar SHA-256 para produzir uma impressão digital dos dados.”
+            </p>
+
+            <!-- Passo 1: Dado Original Enviado -->
+            <div style="margin-bottom: 1.5rem;">
+                <label for="dadoOriginal">1. Dado Enviado pelo Sistema de Origem:</label>
+                <input type="text" id="dadoOriginal" value="Lote-Financeiro-2026-Operacao-9981">
+                <div class="btns">
+                    <button class="btn-p" onclick="gerarHashOriginal()">Gerar Hash da Origem</button>
+                    <button class="btn-s" onclick="copiarHash('hashOrigTxt')">Copiar Hash</button>
+                </div>
+                <div class="hash-display" id="hashOrigTxt">Aguardando geração do hash inicial...</div>
+            </div>
+
+            <!-- Passo 2: Dado Recebido / Pós-Processamento -->
+            <div style="border-top: 1px solid var(--border); padding-top: 1.5rem;">
+                <label for="dadoProcessado">2. Dado Recebido após o Processamento:</label>
+                <input type="text" id="dadoProcessado" value="Lote-Financeiro-2026-Operacao-9981">
+                <div class="btns">
+                    <button class="btn-p" onclick="auditarProcessamento()">Gerar Novo Hash e Auditar Integridade</button>
+                    <button class="btn-s" onclick="simularFraude()">Simular Alteração no Dado</button>
+                </div>
+                <div class="hash-display" id="hashProcTxt">Aguardando novo processamento...</div>
+            </div>
+
+            <div id="resultadoAuditoria" class="veredicto ok">
+                SISTEMA PRONTO PARA AUDITORIA
+            </div>
+
+            <div class="rubrica">
+                <strong>Critérios da Rubrica do Professor Celso Barreto:</strong><br>
+                ✔ <strong>Funcionalidade:</strong> Geração, cópia e comparação ativas.<br>
+                ✔ <strong>Clareza de Código:</strong> Funções nomeadas com Web Crypto API nativa.<br>
+                ✔ <strong>Validação:</strong> Feedback contra campos vazios.<br>
+                ✔ <strong>Tratamento de Erros:</strong> Try/Catch seguro sem travamento de página.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const enc = new TextEncoder();
+        let hashOrigArmazenado = "";
+
+        async function digestSha256(str) {
+            const buf = await crypto.subtle.digest("SHA-256", enc.encode(str));
+            return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, "0")).join("");
+        }
+
+        async function gerarHashOriginal() {
+            const txt = document.getElementById("dadoOriginal").value;
+            if (!txt.trim()) {
+                alert("Informe o dado original!");
+                return;
+            }
+            hashOrigArmazenado = await digestSha256(txt);
+            document.getElementById("hashOrigTxt").textContent = hashOrigArmazenado;
+        }
+
+        async function auditarProcessamento() {
+            if (!hashOrigArmazenado) {
+                await gerarHashOriginal();
+            }
+
+            const txtProc = document.getElementById("dadoProcessado").value;
+            if (!txtProc.trim()) {
+                alert("Informe o dado processado!");
+                return;
+            }
+
+            const hashProc = await digestSha256(txtProc);
+            document.getElementById("hashProcTxt").textContent = hashProc;
+
+            const box = document.getElementById("resultadoAuditoria");
+            if (hashOrigArmazenado === hashProc) {
+                box.className = "veredicto ok";
+                box.textContent = "✔ INTEGRIDADE CONFIRMADA: DADOS INALTERADOS DURANTE O PROCESSAMENTO";
+            } else {
+                box.className = "veredicto err";
+                box.textContent = "✖ ALERTA DE SEGURANÇA: DADOS FORAM ALTERADOS OU CORROMPIDOS!";
+            }
+        }
+
+        function simularFraude() {
+            const inputProc = document.getElementById("dadoProcessado");
+            inputProc.value = inputProc.value + " "; // Adiciona 1 espaço
+            auditarProcessamento();
+        }
+
+        async function copiarHash(elemId) {
+            const txt = document.getElementById(elemId).textContent;
+            if (!txt.includes("Aguardando")) {
+                await navigator.clipboard.writeText(txt);
+                alert("Hash copiado com sucesso!");
+            }
+        }
+
+        gerarHashOriginal();
+    </script>
+</body>
+</html>

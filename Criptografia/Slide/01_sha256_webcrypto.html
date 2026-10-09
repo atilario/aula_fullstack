@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slide 21 - SHA-256 com Web Crypto API</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0f172a;
+            color: #f8fafc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 1rem;
+        }
+        .card {
+            background: #1e293b;
+            border: 1px solid #334155;
+            padding: 2rem;
+            border-radius: 14px;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+        h2 { color: #38bdf8; margin-top: 0; }
+        .hash-box {
+            background: #0f172a;
+            padding: 1rem;
+            border-radius: 8px;
+            font-family: monospace;
+            word-break: break-all;
+            color: #4ade80;
+            margin-top: 1rem;
+            border: 1px solid #334155;
+        }
+        .meta {
+            margin-top: 0.8rem;
+            color: #94a3b8;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>Slide 21: Web Crypto API (SHA-256)</h2>
+        <p>Entrada testada: <strong>"Professor Celso"</strong></p>
+        <div class="hash-box" id="resultado">Calculando hash...</div>
+        <div class="meta" id="info"></div>
+    </div>
+
+    <script src="01_sha256_webcrypto.js"></script>
+    <script>
+        sha256("Professor Celso").then(hash => {
+            document.getElementById("resultado").textContent = hash;
+            document.getElementById("info").textContent = `Resumo de 256 bits gerado com ${hash.length} caracteres hexadecimais.`;
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prática 2 - Investigando o Efeito Avalanche</title>
+    <style>
+        :root {
+            --bg: #0b0f19;
+            --card: #151f32;
+            --primary: #38bdf8;
+            --border: #223249;
+            --text: #f8fafc;
+            --text-muted: #94a3b8;
+            --diff: #f43f5e;
+            --equal: #10b981;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 2rem 1rem;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 920px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        h1, h2 {
+            color: var(--primary);
+            margin-top: 0;
+        }
+
+        .inputs-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        @media (max-width: 700px) {
+            .inputs-grid { grid-template-columns: 1fr; }
+        }
+
+        .input-box label {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 0.4rem;
+        }
+
+        input {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            background: #090d16;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 1rem;
+            outline: none;
+            box-sizing: border-box;
+        }
+
+        input:focus {
+            border-color: var(--primary);
+        }
+
+        .stats-cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .stat-item {
+            background: #0d1524;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.2rem;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin-top: 0.3rem;
+        }
+
+        .stat-number.danger { color: var(--diff); }
+        .stat-number.success { color: var(--equal); }
+
+        .hash-display {
+            background: #090d16;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem;
+            font-family: monospace;
+            font-size: 0.85rem;
+            word-break: break-all;
+            margin-bottom: 0.75rem;
+        }
+
+        .bit-matrix {
+            display: grid;
+            grid-template-columns: repeat(32, 1fr);
+            gap: 3px;
+            margin-top: 1rem;
+            background: #090d16;
+            padding: 1rem;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+        }
+
+        .bit-dot {
+            aspect-ratio: 1;
+            border-radius: 2px;
+            background: #334155;
+            transition: transform 0.2s;
+        }
+
+        .bit-dot.divergente {
+            background: var(--diff);
+            box-shadow: 0 0 3px var(--diff);
+        }
+
+        .bit-dot.igual {
+            background: var(--equal);
+        }
+
+        .legend {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 0.75rem;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .legend-color {
+            width: 14px;
+            height: 14px;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h1>Prática 2 — Investigando o Efeito Avalanche</h1>
+            <p style="color: var(--text-muted);">Altere os textos abaixo para observar como uma modificação mínima na entrada (até 1 único bit) causa uma dispersão drástica de ~50% no resumo:</p>
+
+            <div class="inputs-grid">
+                <div class="input-box">
+                    <label>Entrada A (Padrão: SEGURANCA2026)</label>
+                    <input type="text" id="inA" value="SEGURANCA2026" oninput="executarAvalanche()">
+                </div>
+                <div class="input-box">
+                    <label>Entrada B (Padrão: SEGURANCA2027)</label>
+                    <input type="text" id="inB" value="SEGURANCA2027" oninput="executarAvalanche()">
+                </div>
+            </div>
+
+            <div class="hash-display">
+                <span style="color: var(--text-muted);">Hash A: </span><span id="txtHashA" style="color: #38bdf8;"></span>
+            </div>
+            <div class="hash-display">
+                <span style="color: var(--text-muted);">Hash B: </span><span id="txtHashB" style="color: #a78bfa;"></span>
+            </div>
+
+            <!-- Métricas -->
+            <div class="stats-cards">
+                <div class="stat-item">
+                    <div style="color: var(--text-muted); font-size: 0.85rem;">Bits Divergentes</div>
+                    <div class="stat-number danger" id="numBitsDiff">0 / 256</div>
+                </div>
+                <div class="stat-item">
+                    <div style="color: var(--text-muted); font-size: 0.85rem;">Porcentagem de Diferença</div>
+                    <div class="stat-number" id="porcentagemDiff">0%</div>
+                </div>
+                <div class="stat-item">
+                    <div style="color: var(--text-muted); font-size: 0.85rem;">Chars Hex Diferentes</div>
+                    <div class="stat-number" id="hexDiff">0 / 64</div>
+                </div>
+            </div>
+
+            <h2>Desafio: Mapa Visual dos 256 Bits</h2>
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-color" style="background: var(--diff);"></div>
+                    <span>Bit Divergente (Invertido)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: var(--equal);"></div>
+                    <span>Bit Idêntico (Coincidência)</span>
+                </div>
+            </div>
+
+            <div class="bit-matrix" id="matrizBits">
+                <!-- 256 células renderizadas via JS -->
+            </div>
+
+            <p id="conclusaoTexto" style="margin-top: 1.5rem; line-height: 1.6; color: var(--text-muted); background: #090d16; padding: 1rem; border-radius: 8px; border-left: 4px solid var(--primary);"></p>
+        </div>
+    </div>
+
+    <script src="pratica2_efeito_avalanche.js"></script>
+    <script>
+        async function executarAvalanche() {
+            const a = document.getElementById("inA").value;
+            const b = document.getElementById("inB").value;
+
+            const res = await analisarEfeitoAvalanche(a, b);
+
+            document.getElementById("txtHashA").textContent = res.hashA;
+            document.getElementById("txtHashB").textContent = res.hashB;
+
+            document.getElementById("numBitsDiff").textContent = `${res.bitsDiferentes} / 256`;
+            document.getElementById("porcentagemDiff").textContent = res.porcentagemBitsDiferentes;
+            document.getElementById("hexDiff").textContent = `${res.caracteresDiferentes} / 64`;
+            document.getElementById("conclusaoTexto").textContent = res.conclusao;
+
+            // Renderizar matriz visual de 256 bits
+            const matrix = document.getElementById("matrizBits");
+            matrix.innerHTML = "";
+            for (let i = 0; i < 256; i++) {
+                const dot = document.createElement("div");
+                const diferente = res.binA[i] !== res.binB[i];
+                dot.className = `bit-dot ${diferente ? 'divergente' : 'igual'}`;
+                dot.title = `Bit ${i + 1}: ${diferente ? 'Diferente' : 'Igual'} (A: ${res.binA[i]} | B: ${res.binB[i]})`;
+                matrix.appendChild(dot);
+            }
+        }
+
+        executarAvalanche();
+    </script>
+</body>
+</html>

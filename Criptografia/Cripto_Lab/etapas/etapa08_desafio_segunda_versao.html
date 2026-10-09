@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Etapa 8 — Desafio da Segunda Versão</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --card: #1e293b;
+            --primary: #38bdf8;
+            --primary-hover: #0284c7;
+            --border: #334155;
+            --text: #f8fafc;
+            --muted: #94a3b8;
+            --success: #34d399;
+            --danger: #f87171;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
+        body { background: var(--bg); color: var(--text); padding: 2rem 1rem; display: flex; justify-content: center; }
+        .box { max-width: 650px; width: 100%; background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 2rem; box-shadow: 0 10px 30px rgba(0,0,0,0.4); }
+        h1 { color: var(--primary); font-size: 1.6rem; margin-bottom: 0.5rem; }
+        p.sub { color: var(--muted); font-size: 0.95rem; margin-bottom: 1.5rem; }
+        label { display: block; font-weight: 600; margin-bottom: 0.4rem; font-size: 0.9rem; color: var(--muted); }
+        input[type="text"] { width: 100%; padding: 0.8rem 1rem; background: #0f172a; border: 1px solid var(--border); border-radius: 8px; color: #fff; font-size: 1rem; margin-bottom: 0.5rem; }
+        input[type="text"]:focus { outline: none; border-color: var(--primary); }
+        .counter { font-size: 0.8rem; color: var(--muted); margin-bottom: 1rem; text-align: right; }
+        .btns { display: flex; gap: 0.6rem; flex-wrap: wrap; margin-bottom: 1.2rem; }
+        button { padding: 0.7rem 1.2rem; border-radius: 8px; font-weight: 700; cursor: pointer; border: none; font-size: 0.9rem; }
+        .btn-p { background: var(--primary); color: #0f172a; }
+        .btn-p:hover { background: var(--primary-hover); }
+        .btn-s { background: #334155; color: #fff; }
+        .btn-s:hover { background: #475569; }
+        .output-card { background: #0f172a; border: 1px solid var(--border); border-radius: 8px; padding: 1rem; font-family: monospace; font-size: 0.85rem; word-break: break-all; margin-bottom: 1rem; }
+        .status { font-size: 0.88rem; font-weight: 600; min-height: 20px; margin-bottom: 1rem; }
+        .status.err { color: var(--danger); }
+        .status.suc { color: var(--success); }
+        .compare-sec { border-top: 1px solid var(--border); padding-top: 1.5rem; margin-top: 1rem; }
+        .comp-banner { padding: 0.9rem; text-align: center; border-radius: 8px; font-weight: 800; background: #334155; margin-top: 0.8rem; }
+        .comp-banner.equal { background: rgba(52, 211, 153, 0.2); color: var(--success); border: 1px solid var(--success); }
+        .comp-banner.diff { background: rgba(248, 113, 113, 0.2); color: var(--danger); border: 1px solid var(--danger); }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <h1>Etapa 8 — Desafio da Segunda Versão</h1>
+        <p class="sub">Aplicação autônoma: geração, cópia, validação, contador e comparação de hashes.</p>
+
+        <label for="txtPrincipal">Informação:</label>
+        <input type="text" id="txtPrincipal" placeholder="Digite uma informação...">
+        <div class="counter" id="contPrincipal">0 caracteres</div>
+
+        <div class="btns">
+            <button class="btn-p" onclick="executarGeracao()">Gerar SHA-256</button>
+            <button class="btn-s" onclick="copiarHash()">Copiar Hash</button>
+            <button class="btn-s" onclick="limparPrincipal()">Limpar</button>
+        </div>
+
+        <div id="statusPrincipal" class="status"></div>
+
+        <div class="output-card">
+            <div style="color: var(--muted); margin-bottom: 0.3rem;">Hash Gerado (64 caracteres hex):</div>
+            <div id="hashResultado" style="color: var(--success);">—</div>
+        </div>
+
+        <!-- Seção de Comparação -->
+        <div class="compare-sec">
+            <h2 style="font-size: 1.2rem; color: var(--primary); margin-bottom: 1rem;">Comparação entre Dois Dados</h2>
+            <input type="text" id="cmp1" placeholder="Primeira informação...">
+            <input type="text" id="cmp2" placeholder="Segunda informação...">
+            <div class="btns">
+                <button class="btn-p" onclick="executarComparacao()">Comparar Hashes</button>
+            </div>
+            <div id="bannerComp" class="comp-banner">AGUARDANDO COMPARAÇÃO</div>
+        </div>
+    </div>
+
+    <script>
+        const enc = new TextEncoder();
+
+        async function sha256(str) {
+            const buf = await crypto.subtle.digest("SHA-256", enc.encode(str));
+            return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, "0")).join("");
+        }
+
+        const inputP = document.getElementById("txtPrincipal");
+        const countP = document.getElementById("contPrincipal");
+        const statusP = document.getElementById("statusPrincipal");
+        const resH = document.getElementById("hashResultado");
+
+        inputP.addEventListener("input", () => {
+            countP.textContent = `${inputP.value.length} caracteres`;
+        });
+
+        async function executarGeracao() {
+            const val = inputP.value;
+            if (!val.trim()) {
+                statusP.className = "status err";
+                statusP.textContent = "Erro: Digite uma informação antes de gerar o hash.";
+                inputP.focus();
+                return;
+            }
+            try {
+                const h = await sha256(val);
+                resH.textContent = h;
+                statusP.className = "status suc";
+                statusP.textContent = "Hash SHA-256 gerado com sucesso (64 caracteres).";
+            } catch {
+                statusP.className = "status err";
+                statusP.textContent = "Falha ao calcular hash na Web Crypto API.";
+            }
+        }
+
+        async function copiarHash() {
+            if (resH.textContent === "—") {
+                statusP.className = "status err";
+                statusP.textContent = "Gere um hash primeiro antes de copiar.";
+                return;
+            }
+            await navigator.clipboard.writeText(resH.textContent);
+            statusP.className = "status suc";
+            statusP.textContent = "Hash copiado com sucesso para a área de transferência!";
+        }
+
+        function limparPrincipal() {
+            inputP.value = "";
+            countP.textContent = "0 caracteres";
+            resH.textContent = "—";
+            statusP.textContent = "";
+            inputP.focus();
+        }
+
+        async function executarComparacao() {
+            const v1 = document.getElementById("cmp1").value;
+            const v2 = document.getElementById("cmp2").value;
+            const banner = document.getElementById("bannerComp");
+
+            if (!v1 || !v2) {
+                banner.className = "comp-banner";
+                banner.textContent = "PREENCHA AMBOS OS CAMPOS PARA COMPARAR";
+                return;
+            }
+
+            const h1 = await sha256(v1);
+            const h2 = await sha256(v2);
+
+            if (h1 === h2) {
+                banner.className = "comp-banner equal";
+                banner.textContent = "✔ HASHES IGUAIS (CONTEÚDO ÍNTEGRO)";
+            } else {
+                banner.className = "comp-banner diff";
+                banner.textContent = "✖ HASHES DIFERENTES (DADOS MODIFICADOS)";
+            }
+        }
+    </script>
+</body>
+</html>

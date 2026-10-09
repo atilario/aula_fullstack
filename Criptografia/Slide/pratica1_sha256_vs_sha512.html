@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prática 1 - Comparando SHA-256 e SHA-512</title>
+    <style>
+        :root {
+            --bg: #090d16;
+            --card: #131c2e;
+            --primary: #38bdf8;
+            --secondary: #818cf8;
+            --border: #24324a;
+            --text: #f1f5f9;
+            --text-muted: #94a3b8;
+            --highlight: #34d399;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 2rem 1rem;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 900px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        h1, h2 {
+            color: var(--primary);
+            margin-top: 0;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        input {
+            flex: 1;
+            padding: 0.85rem 1rem;
+            background: #090d16;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: var(--primary);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        button.btn-hash {
+            flex: 1;
+            padding: 0.85rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 700;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-sha256 {
+            background: var(--primary);
+            color: #090d16;
+        }
+
+        .btn-sha256:hover {
+            background: #0ea5e9;
+        }
+
+        .btn-sha512 {
+            background: var(--secondary);
+            color: #090d16;
+        }
+
+        .btn-sha512:hover {
+            background: #6366f1;
+            color: white;
+        }
+
+        .result-box {
+            background: #090d16;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.2rem;
+            font-family: monospace;
+            word-break: break-all;
+        }
+
+        .tag-info {
+            display: inline-block;
+            background: #1e293b;
+            color: #38bdf8;
+            padding: 0.3rem 0.6rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1.5rem;
+            font-size: 0.85rem;
+        }
+
+        th, td {
+            padding: 0.75rem 0.6rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            background: #0d1522;
+            color: var(--primary);
+        }
+
+        .hash-code {
+            font-family: monospace;
+            color: var(--highlight);
+            word-break: break-all;
+        }
+
+        .explanation {
+            background: #0d1522;
+            border-left: 4px solid var(--primary);
+            padding: 1.2rem 1.5rem;
+            border-radius: 0 8px 8px 0;
+            line-height: 1.6;
+            margin-top: 1.5rem;
+            color: #cbd5e1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h1>Prática 1 — Comparando SHA-256 e SHA-512</h1>
+            <p style="color: var(--text-muted);">Gere resumos criptográficos usando nativamente a Web Crypto API:</p>
+
+            <div class="input-group">
+                <input type="text" id="fraseInput" placeholder="Digite uma frase..." value="Professor Celso">
+            </div>
+
+            <div class="btn-group">
+                <button class="btn-hash btn-sha256" onclick="processarHash('SHA-256')">Gerar SHA-256</button>
+                <button class="btn-hash btn-sha512" onclick="processarHash('SHA-512')">Gerar SHA-512</button>
+            </div>
+
+            <div class="result-box">
+                <span id="badgeAlgoritmo" class="tag-info">Aguardando comando...</span>
+                <div id="resultadoHash" style="color: var(--highlight); margin-top: 0.5rem;">Clique em um dos botões acima</div>
+                <div id="contadorCaracteres" style="color: var(--text-muted); margin-top: 0.5rem; font-size: 0.9rem;"></div>
+            </div>
+
+            <h2>Tabela de Registros Solicitada no Slide 31</h2>
+            <div style="overflow-x: auto;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Entrada</th>
+                            <th>Algoritmo</th>
+                            <th>Bits</th>
+                            <th>Caracteres Hex</th>
+                            <th>Hash</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabelaPratica1">
+                        <tr><td colspan="5">Calculando testes...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Explicação solicitada no slide 31 -->
+            <div class="explanation">
+                <strong style="color: var(--primary);">❓ Por que o tamanho da mensagem de entrada não determina o tamanho final do resumo?</strong><br>
+                Funções hash criptográficas utilizam construções como a <em>estrutura Merkle-Damgård</em> (no SHA-2) com preenchimento (padding) e blocos fixos de processamento. A saída é projetada matematicamente para ser um <strong>resumo condensado de tamanho rigorosamente fixo</strong> (256 bits para SHA-256 = 64 hexadecimais; 512 bits para SHA-512 = 128 hexadecimais), independentemente se a entrada tem 0 caracteres (string vazia), uma única letra ou um arquivo de 50 Gigabytes.
+            </div>
+        </div>
+    </div>
+
+    <script src="pratica1_sha256_vs_sha512.js"></script>
+    <script>
+        async function processarHash(algoritmo) {
+            const texto = document.getElementById("fraseInput").value;
+            const hash = await gerarHash(texto, algoritmo);
+            const bits = algoritmo === "SHA-256" ? 256 : 512;
+
+            document.getElementById("badgeAlgoritmo").textContent = `${algoritmo} (${bits} bits)`;
+            document.getElementById("resultadoHash").textContent = hash;
+            document.getElementById("contadorCaracteres").textContent = `Contagem: ${hash.length} caracteres hexadecimais (${bits} bits).`;
+        }
+
+        async function preencherTabelaInicial() {
+            const dados = await executarBateriaPratica1();
+            const tbody = document.getElementById("tabelaPratica1");
+            tbody.innerHTML = dados.map(item => `
+                <tr>
+                    <td><strong>${item.entrada}</strong></td>
+                    <td>${item.algoritmo}</td>
+                    <td>${item.bits}</td>
+                    <td>${item.caracteresHex}</td>
+                    <td class="hash-code">${item.hash}</td>
+                </tr>
+            `).join("");
+        }
+
+        processarHash('SHA-256');
+        preencherTabelaInicial();
+    </script>
+</body>
+</html>

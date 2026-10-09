@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roteiro Aula Laboratório SHA-256 - Professor Celso Barreto</title>
+    <style>
+        :root {
+            --ink: #16212d;
+            --muted: #5a6978;
+            --paper: #f4f7f9;
+            --card: #ffffff;
+            --line: #d9e1e7;
+            --navy: #12314a;
+            --blue: #126e9b;
+            --teal: #0b8074;
+            --soft-blue: #e7f4fb;
+            --soft-teal: #e5f6f2;
+            --soft-amber: #fff4d8;
+            --amber: #a85d00;
+            --danger: #aa2e2e;
+            --success: #08766a;
+            --mono: "Consolas", "Courier New", monospace;
+        }
+
+        * { box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            margin: 0;
+            color: var(--ink);
+            background: var(--paper);
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            line-height: 1.55;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #12314a 0%, #175f78 100%);
+            color: #fff;
+            padding: 48px 24px 38px;
+            border-bottom: 6px solid #efb23b;
+        }
+
+        .content-width { width: min(1120px, 100%); margin: 0 auto; }
+        .eyebrow {
+            display: inline-flex;
+            gap: 8px;
+            padding: 6px 12px;
+            border: 1px solid rgba(255,255,255,.38);
+            border-radius: 999px;
+            font-size: .76rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        h1 { margin: 14px 0 8px; font-size: 2.2rem; }
+        .hero p { margin: 0; color: #e4f2f7; font-size: 1.05rem; }
+
+        .progress-wrap {
+            margin-top: 24px;
+            max-width: 760px;
+            background: rgba(255,255,255,.14);
+            padding: 14px 16px;
+            border-radius: 12px;
+        }
+        .progress-label { display: flex; justify-content: space-between; font-size: .88rem; font-weight: 700; }
+        .progress-track { height: 10px; background: rgba(255,255,255,.26); border-radius: 999px; margin-top: 9px; overflow: hidden; }
+        .progress-fill { height: 100%; width: 0%; background: #f2b43d; border-radius: inherit; transition: width .25s ease; }
+
+        main { padding: 28px 24px 56px; }
+        .intro-grid { display: grid; grid-template-columns: 1.15fr .85fr; gap: 22px; }
+        @media (max-width: 780px) { .intro-grid { grid-template-columns: 1fr; } }
+
+        .panel, .lesson, .lab-box, .challenge, .final-card {
+            background: var(--card);
+            border: 1px solid var(--line);
+            border-radius: 14px;
+            box-shadow: 0 8px 20px rgba(28, 52, 70, .05);
+            margin-bottom: 1rem;
+        }
+        .panel { padding: 22px; }
+        .panel h2 { margin: 0 0 12px; color: var(--navy); }
+
+        .objective-list { display: grid; gap: 10px; }
+        .check-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 10px;
+            border-radius: 8px;
+            background: #f8fafb;
+        }
+        .check-row input { margin-top: 4px; accent-color: var(--teal); }
+
+        .timeline { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
+        .timeline li {
+            display: grid;
+            grid-template-columns: 34px 1fr auto;
+            gap: 10px;
+            align-items: center;
+            padding: 9px;
+            border-bottom: 1px solid #edf1f4;
+        }
+        .step-number {
+            display: grid; place-items: center; width: 28px; height: 28px;
+            color: #fff; background: var(--blue); border-radius: 50%; font-size: .78rem; font-weight: 800;
+        }
+
+        .section-title { margin: 36px 0 14px; color: var(--navy); font-size: 1.6rem; }
+        .lesson { overflow: hidden; }
+        summary {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px 21px;
+            color: var(--navy);
+            font-weight: 800;
+            cursor: pointer;
+            background: #fff;
+        }
+        summary::after { content: "＋"; color: var(--blue); font-size: 1.3rem; }
+        details[open] summary { border-bottom: 1px solid var(--line); background: #fbfdfe; }
+        details[open] summary::after { content: "−"; }
+        .lesson-body { padding: 22px; }
+
+        .callout {
+            padding: 14px 16px;
+            border-left: 4px solid var(--blue);
+            background: var(--soft-blue);
+            border-radius: 0 9px 9px 0;
+            margin: 16px 0;
+        }
+        .callout.try { border-color: var(--amber); background: var(--soft-amber); }
+        .callout.success { border-color: var(--teal); background: var(--soft-teal); }
+
+        .code-wrap { position: relative; margin: 14px 0; }
+        pre {
+            margin: 0;
+            padding: 17px;
+            overflow: auto;
+            color: #eaf5f8;
+            background: #162b39;
+            border-radius: 10px;
+            font-family: var(--mono);
+            font-size: .88rem;
+            line-height: 1.55;
+        }
+        .copy-code {
+            position: absolute;
+            top: 9px; right: 9px;
+            border: 1px solid #4f7282;
+            border-radius: 7px;
+            padding: 5px 10px;
+            color: #effbff;
+            background: #234455;
+            font-size: .76rem;
+            cursor: pointer;
+        }
+        .copy-code:hover { background: #316077; }
+
+        .checkpoint {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            padding: 12px;
+            border: 1px solid #b7d8d2;
+            border-radius: 9px;
+            background: #f5fffc;
+            margin-top: 16px;
+        }
+        .checkpoint input { accent-color: var(--teal); width: 18px; height: 18px; }
+
+        .challenge { padding: 23px; border-top: 5px solid #e6a32d; }
+        .final-card { padding: 23px; border-top: 5px solid var(--teal); }
+
+        footer { padding: 32px 24px; color: #d9e7ec; background: #12314a; }
+        .delivery { padding: 18px; color: #153f54; background: #f2ba4a; border-radius: 11px; font-weight: 800; margin-top: 1.5rem; }
+    </style>
+</head>
+<body>
+    <header class="hero">
+        <div class="content-width">
+            <span class="eyebrow">JavaScript · Web Crypto API · Prática Guiada</span>
+            <h1>Laboratório de Hash SHA-256</h1>
+            <p>Roteiro de aula prática | aproximadamente 2 horas — Professor Celso Barreto</p>
+            
+            <div class="progress-wrap">
+                <div class="progress-label">
+                    <span>Checkpoints concluídos</span>
+                    <span id="progress-text">0 de 8</span>
+                </div>
+                <div class="progress-track">
+                    <div class="progress-fill" id="progress-fill"></div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="content-width">
+        <!-- Abertura e Objetivos -->
+        <section class="intro-grid">
+            <article class="panel">
+                <h2>Abertura e Objetivos</h2>
+                <p>Ao final deste laboratório, você deverá compreender o que é uma função hash, diferenciar hash de criptografia, entender o funcionamento básico do SHA-256, capturar dados de um <code>&lt;input&gt;</code>, gerar e exibir um hash, comparar hashes e observar o efeito avalanche.</p>
+                <div class="objective-list">
+                    <div class="check-row">
+                        <input class="progress-check" id="obj-1" type="checkbox">
+                        <label for="obj-1">Entendo que uma função hash produz uma impressão digital dos dados.</label>
+                    </div>
+                    <div class="check-row">
+                        <input class="progress-check" id="obj-2" type="checkbox">
+                        <label for="obj-2">Consigo capturar texto digitado com <code>getElementById()</code> e <code>.value</code>.</label>
+                    </div>
+                    <div class="check-row">
+                        <input class="progress-check" id="obj-3" type="checkbox">
+                        <label for="obj-3">Consigo gerar e comparar hashes SHA-256 no navegador.</label>
+                    </div>
+                    <div class="check-row">
+                        <input class="progress-check" id="obj-4" type="checkbox">
+                        <label for="obj-4">Sei explicar por que SHA-256 não é criptografia.</label>
+                    </div>
+                </div>
+            </article>
+
+            <aside class="panel">
+                <h2>Linha do Tempo · 10 Etapas</h2>
+                <ol class="timeline">
+                    <li><span class="step-number">1</span><span>Interface</span><span style="color:var(--muted)">10 min</span></li>
+                    <li><span class="step-number">2</span><span>Captura do input</span><span style="color:var(--muted)">10 min</span></li>
+                    <li><span class="step-number">3</span><span>Conversão do texto</span><span style="color:var(--muted)">10 min</span></li>
+                    <li><span class="step-number">4</span><span>Geração do SHA-256</span><span style="color:var(--muted)">15 min</span></li>
+                    <li><span class="step-number">5</span><span>Hexadecimal</span><span style="color:var(--muted)">15 min</span></li>
+                    <li><span class="step-number">6</span><span>Experimento</span><span style="color:var(--muted)">15 min</span></li>
+                    <li><span class="step-number">7</span><span>Comparação</span><span style="color:var(--muted)">15 min</span></li>
+                    <li><span class="step-number">8</span><span>Desafio</span><span style="color:var(--muted)">10 min</span></li>
+                    <li><span class="step-number">9</span><span>Segurança</span><span style="color:var(--muted)">5 min</span></li>
+                    <li><span class="step-number">10</span><span>Problema final</span><span style="color:var(--muted)">15 min</span></li>
+                </ol>
+            </aside>
+        </section>
+
+        <h2 class="section-title">Roteiro Progressivo de Aprendizagem</h2>
+
+        <!-- Antes de Codificar -->
+        <details class="lesson" open>
+            <summary>Antes de codificar: Arquitetura do projeto</summary>
+            <div class="lesson-body">
+                <p>Organize o projeto separando estrutura, aparência e comportamento:</p>
+                <pre>laboratorio-sha/
+├── index.html   (estrutura e elementos visíveis)
+├── style.css    (aparência, layout, contraste)
+└── script.js    (Web Crypto API, eventos e hash)</pre>
+                <div class="checkpoint">
+                    <input class="progress-check" id="chk-arq" type="checkbox">
+                    <label for="chk-arq">Checkpoint: Consigo explicar o papel de cada arquivo no projeto?</label>
+                </div>
+            </div>
+        </details>
+
+        <!-- Etapa 1 -->
+        <details class="lesson">
+            <summary>Etapa 1 — Construção da interface (HTML + CSS)</summary>
+            <div class="lesson-body">
+                <p>Construa primeiro a experiência visual com <code>label</code> associado ao campo via <code>for</code>, botões com <code>type="button"</code> e área reservada para mensagens de erro/sucesso.</p>
+                <div class="callout try">
+                    <strong>Requisitos:</strong> IDs claros (<code>entrada</code>, <code>gerar</code>, <code>resultado</code>) e contraste adequado.
+                </div>
+                <div class="checkpoint">
+                    <input class="progress-check" id="chk-e1" type="checkbox">
+                    <label for="chk-e1">Checkpoint 1: Interface pronta com acessibilidade e sem erros de console.</label>
+                </div>
+            </div>
+        </details>
+
+        <!-- Etapa 2 -->
+        <details class="lesson">
+            <summary>Etapa 2 — Captura do input (JavaScript)</summary>
+            <div class="lesson-body">
+                <pre>const campo = document.getElementById("nome");
+const texto = campo.value;
+console.log(texto);</pre>
+                <div class="callout">
+                    <code>document.getElementById()</code> localiza o elemento no DOM e <code>.value</code> lê o texto digitado.
+                </div>
+                <div class="checkpoint">
+                    <input class="progress-check" id="chk-e2" type="checkbox">
+                    <label for="chk-e2">Checkpoint 2: Consigo capturar 'Celso', 'Professor Celso', '123456'.</label>
+                </div>
+            </div>
+        </details>
+
+        <!-- Etapa 3 -->
+        <details class="lesson">
+            <summary>Etapa 3 — Conversão do texto para bytes (TextEncoder)</summary>
+            <div class="lesson-body">
+                <p>O SHA-256 recebe bytes (números de 0 a 255), e não strings diretamente. Usamos <code>TextEncoder</code> para codificar o texto em UTF-8:</p>
+                <pre>const encoder = new TextEncoder();
+const dados = encoder.encode("Celso");
+console.log(dados); // Uint8Array(5) [67, 101, 108, 115, 111]</pre>
+            </div>
+        </details>
+
+        <!-- Etapa 4 -->
+        <details class="lesson">
+            <summary>Etapa 4 — Geração do SHA-256 (Web Crypto API)</summary>
+            <div class="lesson-body">
+                <pre>async function gerarResumo(dados) {
+    const resultado = await crypto.subtle.digest("SHA-256", dados);
+    return resultado; // Retorna um ArrayBuffer
+}</pre>
+                <div class="callout try">
+                    <strong>Atenção:</strong> <code>crypto.subtle.digest</code> é assíncrono e devolve uma <code>Promise</code>, exigindo <code>async/await</code> ou <code>.then()</code>.
+                </div>
+            </div>
+        </details>
+
+        <!-- Etapa 5 -->
+        <details class="lesson">
+            <summary>Etapa 5 — Conversão para hexadecimal (64 caracteres)</summary>
+            <div class="lesson-body">
+                <pre>function bufferParaHex(buffer) {
+    const bytes = new Uint8Array(buffer);
+    return Array.from(bytes)
+        .map(byte => byte.toString(16).padStart(2, "0"))
+        .join("");
+}</pre>
+                <p>SHA-256 produz 32 bytes. Em hexadecimal, cada byte ocupa 2 caracteres, resultando em <strong>exatamente 64 caracteres hexadecimais</strong>.</p>
+                <div class="checkpoint">
+                    <input class="progress-check" id="chk-e5" type="checkbox">
+                    <label for="chk-e5">Checkpoint 5: Gerei meu primeiro hash e confirmei os 64 caracteres.</label>
+                </div>
+            </div>
+        </details>
+
+        <!-- Etapa 6 -->
+        <details class="lesson">
+            <summary>Etapa 6 — Experimento e efeito avalanche</summary>
+            <div class="lesson-body">
+                <p>Compare as seguintes entradas:</p>
+                <ul>
+                    <li><code>Celso</code> vs <code>celso</code> (apenas 1 letra minúscula altera mais de 50% dos bits!)</li>
+                    <li><code>Celso1</code> vs <code>Celso2</code> (1 dígito muda o resumo completamente)</li>
+                    <li><code>Professor</code> vs <code>Professor Celso</code></li>
+                </ul>
+                <div class="checkpoint">
+                    <input class="progress-check" id="chk-e6" type="checkbox">
+                    <label for="chk-e6">Checkpoint 6: Observei o efeito avalanche e registrei as diferenças.</label>
+                </div>
+            </div>
+        </details>
+
+        <!-- Etapa 7 -->
+        <details class="lesson">
+            <summary>Etapa 7 — Comparação de dados</summary>
+            <div class="lesson-body">
+                <pre>const hashUm = await textoParaHash(dado1);
+const hashDois = await textoParaHash(dado2);
+const saoIguais = hashUm === hashDois;</pre>
+                <div class="callout success">
+                    Permite detectar imediatamente se um arquivo ou mensagem foi adulterado em trânsito.
+                </div>
+            </div>
+        </details>
+
+        <!-- Etapa 8: Desafio -->
+        <section class="challenge">
+            <h2>Etapa 8 — Desafio da Segunda Versão</h2>
+            <p>Desenvolva uma versão autônoma com: campo de entrada, geração SHA-256, botão de cópia com clipboard, comparação de dois dados, contador de caracteres e validação de campos vazios.</p>
+            <p>👉 <em>Disponível na pasta: <code>etapas/etapa08_desafio_segunda_versao.html</code></em></p>
+        </section>
+
+        <!-- Etapa 9: Segurança -->
+        <details class="lesson">
+            <summary>Etapa 9 — Discussão de segurança</summary>
+            <div class="lesson-body">
+                <div class="callout try">
+                    <strong>⚠️ SHA-256 NÃO É CRIPTOGRAFIA!</strong><br>
+                    Criptografia é bidirecional (cifra e decifra com chave). Hash é unidirecional (apenas resume).<br>
+                    <strong>Não use SHA-256 puro para senhas:</strong> GPUs calculam bilhões de hashes por segundo. Senhas devem usar KDFs lentos com salt (Argon2id, bcrypt, PBKDF2).
+                </div>
+            </div>
+        </details>
+
+        <!-- Etapa 10: Problema Final -->
+        <section class="final-card">
+            <h2>Etapa 10 — Problema Final</h2>
+            <p><strong>Cenário Empresarial:</strong> Uma empresa precisa verificar se dados enviados por seus sistemas sofreram alterações durante o processamento. Construa a aplicação de auditoria com comparação de integridade.</p>
+            <p>👉 <em>Disponível na pasta: <code>etapas/etapa10_problema_final.html</code></em></p>
+        </section>
+    </main>
+
+    <footer>
+        <div class="content-width">
+            <h2>Encerramento Pedagógico</h2>
+            <p>Domínio prático de Web Crypto API, TextEncoder, Uint8Array, Promises, Hexadecimal, Integridade e Efeito Avalanche.</p>
+            <div class="delivery">
+                Envie o projeto com index.html, style.css e script.js e responda às perguntas de reflexão.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        function updateProgress() {
+            const checks = [...document.querySelectorAll(".progress-check")];
+            const completed = checks.filter(c => c.checked).length;
+            const pct = (completed / checks.length) * 100;
+            document.getElementById("progress-fill").style.width = pct + "%";
+            document.getElementById("progress-text").textContent = `${completed} de ${checks.length}`;
+        }
+        document.querySelectorAll(".progress-check").forEach(c => c.addEventListener("change", updateProgress));
+        updateProgress();
+    </script>
+</body>
+</html>

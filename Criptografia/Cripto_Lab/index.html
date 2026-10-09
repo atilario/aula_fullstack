@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laboratório de Hash SHA-256</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <main class="container">
+        <header class="header">
+            <span class="badge">Laboratório Prático</span>
+            <h1>Laboratório de Hash SHA-256</h1>
+            <p class="subtitle">Geração, experimentação e comparação de impressões digitais criptográficas com Web Crypto API nativa.</p>
+        </header>
+
+        <!-- Seção 1: Entrada e Geração -->
+        <section class="card" aria-labelledby="sec-geracao">
+            <h2 id="sec-geracao">1. Gerar Hash SHA-256</h2>
+            
+            <div class="field-group">
+                <label for="entrada">Digite uma informação:</label>
+                <input id="entrada" type="text" autocomplete="off" placeholder="Ex.: Professor Celso">
+                <div class="field-info">
+                    <span>O processamento é 100% local no navegador.</span>
+                    <span id="contador">0 caracteres</span>
+                </div>
+            </div>
+
+            <!-- Chips de Exemplos Rápidos -->
+            <div class="chips-group">
+                <span style="font-size: 0.85rem; color: var(--muted); align-self: center;">Exemplos rápidos:</span>
+                <button type="button" class="chip" data-ex="Celso">Celso</button>
+                <button type="button" class="chip" data-ex="Professor Celso">Professor Celso</button>
+                <button type="button" class="chip" data-ex="123456">123456</button>
+                <button type="button" class="chip" data-ex="MinhaSenha@2026">MinhaSenha@2026</button>
+            </div>
+
+            <div class="actions">
+                <button id="gerar" type="button" class="btn btn-primary">Gerar SHA-256</button>
+                <button id="copiar" type="button" class="btn btn-secondary">Copiar Hash</button>
+                <button id="limpar" type="button" class="btn btn-outline">Limpar</button>
+            </div>
+
+            <div id="status" class="status-msg" aria-live="polite"></div>
+
+            <div class="results-grid">
+                <div class="result-box">
+                    <span class="result-label">Dado Original:</span>
+                    <output id="original">—</output>
+                </div>
+                <div class="result-box">
+                    <span class="result-label">Hash SHA-256 (64 hexadecimais / 256 bits):</span>
+                    <output id="hash" class="hash-output">—</output>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção 2: Comparação de Dados -->
+        <section class="card" aria-labelledby="sec-comparar">
+            <h2 id="sec-comparar">2. Comparar Dois Dados</h2>
+            <p class="section-desc">Verifique se duas entradas geram a mesma impressão digital ou se houve alteração:</p>
+
+            <div class="compare-grid">
+                <div class="field-group">
+                    <label for="dado1">Dado 1:</label>
+                    <input id="dado1" type="text" autocomplete="off" placeholder="Primeira informação">
+                </div>
+                <div class="field-group">
+                    <label for="dado2">Dado 2:</label>
+                    <input id="dado2" type="text" autocomplete="off" placeholder="Segunda informação">
+                </div>
+            </div>
+
+            <div class="actions">
+                <button id="comparar" type="button" class="btn btn-primary">Comparar Hashes</button>
+            </div>
+
+            <output id="resultado-comparacao" class="comparison-banner">AGUARDANDO COMPARAÇÃO</output>
+            <p id="status-comparacao" class="status-msg" aria-live="polite"></p>
+        </section>
+
+        <!-- Seção 3: Experimento e Efeito Avalanche -->
+        <section class="card" aria-labelledby="sec-experimento">
+            <h2 id="sec-experimento">3. Tabela de Experimentos (Efeito Avalanche)</h2>
+            <p class="section-desc">Observe como modificações mínimas na entrada alteram drasticamente o hash final:</p>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Entrada</th>
+                            <th>Hash SHA-256 Calculado</th>
+                            <th>Ação</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Celso</strong></td>
+                            <td><output id="hash-Celso" class="table-hash">—</output></td>
+                            <td><button type="button" class="btn-sm" data-teste="Celso">Calcular</button></td>
+                        </tr>
+                        <tr>
+                            <td><strong>celso</strong></td>
+                            <td><output id="hash-celso" class="table-hash">—</output></td>
+                            <td><button type="button" class="btn-sm" data-teste="celso">Calcular</button></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Celso1</strong></td>
+                            <td><output id="hash-Celso1" class="table-hash">—</output></td>
+                            <td><button type="button" class="btn-sm" data-teste="Celso1">Calcular</button></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Celso2</strong></td>
+                            <td><output id="hash-Celso2" class="table-hash">—</output></td>
+                            <td><button type="button" class="btn-sm" data-teste="Celso2">Calcular</button></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Professor</strong></td>
+                            <td><output id="hash-Professor" class="table-hash">—</output></td>
+                            <td><button type="button" class="btn-sm" data-teste="Professor">Calcular</button></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Professor Celso</strong></td>
+                            <td><output id="hash-Professor-Celso" class="table-hash">—</output></td>
+                            <td><button type="button" class="btn-sm" data-teste="Professor Celso">Calcular</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="actions" style="margin-top: 1rem;">
+                <button id="calcular-todos-experimentos" type="button" class="btn btn-secondary">Calcular Todos Automaticamente</button>
+            </div>
+        </section>
+
+        <!-- Rodapé Pedagógico -->
+        <footer class="footer-note">
+            <p><strong>Aviso de Segurança:</strong> SHA-256 é uma função hash unidirecional para integridade. Não é criptografia reversível e <em>não deve ser utilizado puro para armazenamento de senhas</em> (sistemas seguros utilizam KDFs com salt como Argon2id, bcrypt ou PBKDF2).</p>
+        </footer>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>

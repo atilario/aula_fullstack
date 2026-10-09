@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slide 25 - Prática Guiada: SHA-256 e Comparador</title>
+    <style>
+        :root {
+            --bg: #0b0f19;
+            --card: #161f30;
+            --primary: #38bdf8;
+            --primary-hover: #0284c7;
+            --border: #26354a;
+            --text: #e2e8f0;
+            --text-muted: #94a3b8;
+            --success: #10b981;
+            --danger: #ef4444;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 2rem 1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 850px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+        }
+
+        h1, h2, h3 {
+            color: var(--primary);
+            margin-top: 0;
+        }
+
+        .badge-bar {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .badge-btn {
+            background: #1e293b;
+            color: var(--primary);
+            border: 1px solid var(--border);
+            padding: 0.4rem 0.9rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .badge-btn:hover {
+            background: var(--primary);
+            color: #0b0f19;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 0.8rem 1rem;
+            border-radius: 8px;
+            background: #0b0f19;
+            border: 1px solid var(--border);
+            color: #fff;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--primary);
+        }
+
+        button.main-btn {
+            background: var(--primary);
+            color: #0b0f19;
+            border: none;
+            padding: 0.8rem 1.6rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        button.main-btn:hover {
+            background: var(--primary-hover);
+        }
+
+        .output-box {
+            background: #0b0f19;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.2rem;
+            margin-top: 1rem;
+            font-family: monospace;
+            word-break: break-all;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+            margin-top: 1.5rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        th, td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            color: var(--primary);
+            background: #0f172a;
+        }
+
+        .hash-cell {
+            font-family: monospace;
+            color: #4ade80;
+            font-size: 0.8rem;
+        }
+
+        .status-pill {
+            display: inline-block;
+            padding: 0.35rem 0.8rem;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 0.85rem;
+        }
+
+        .status-pill.equal {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--success);
+            border: 1px solid var(--success);
+        }
+
+        .status-pill.diff {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--danger);
+            border: 1px solid var(--danger);
+        }
+
+        .callout {
+            background: #0f172a;
+            border-left: 4px solid var(--primary);
+            padding: 1rem 1.5rem;
+            border-radius: 0 8px 8px 0;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: var(--text-muted);
+            margin-top: 1rem;
+        }
+        .callout strong {
+            color: var(--text);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Módulo 1: Gerador de SHA-256 e testes predefinidos -->
+        <div class="card">
+            <h1>Prática Guiada (Slide 25)</h1>
+            <p style="color: var(--text-muted);">Teste rápido dos termos pedidos na aula:</p>
+
+            <div class="badge-bar">
+                <span>Atalhos de teste:</span>
+                <button class="badge-btn" onclick="carregarTexto('Celso')">Celso</button>
+                <button class="badge-btn" onclick="carregarTexto('celso')">celso</button>
+                <button class="badge-btn" onclick="carregarTexto('Celso1')">Celso1</button>
+                <button class="badge-btn" onclick="carregarTexto('Celso2')">Celso2</button>
+            </div>
+
+            <div class="form-row">
+                <input type="text" id="inputTexto" placeholder="Digite uma frase ou palavra" value="Celso">
+                <button class="main-btn" onclick="gerarHashUnico()">Gerar SHA-256</button>
+            </div>
+
+            <div class="output-box">
+                <div style="color: var(--text-muted); margin-bottom: 0.3rem;">Hash SHA-256 (64 caracteres hexadecimais = 256 bits):</div>
+                <div id="resultadoHash" style="color: #4ade80;">Clique no botão para gerar...</div>
+            </div>
+
+            <h3>Comparativo Lado a Lado dos 4 Testes:</h3>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Entrada</th>
+                            <th>Hash SHA-256 (Hex)</th>
+                            <th>Tamanho</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabelaTestes">
+                        <tr><td colspan="3">Carregando comparativo...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Módulo 2: Dois inputs e comparador -->
+        <div class="card">
+            <h2>Comparador de Hashes (Dois Inputs)</h2>
+            <p style="color: var(--text-muted);">Digite em ambos os campos para verificar se os hashes são idênticos em tempo real:</p>
+
+            <div class="form-row">
+                <input type="text" id="input1" placeholder="Entrada 1" value="Professor Celso" oninput="executarComparacao()">
+            </div>
+            <div class="form-row">
+                <input type="text" id="input2" placeholder="Entrada 2" value="professor Celso" oninput="executarComparacao()">
+            </div>
+
+            <div style="margin-top: 1rem;">
+                <span id="resultadoComparacao" class="status-pill diff">Calculando...</span>
+            </div>
+
+            <div class="output-box" style="margin-top: 1rem;">
+                <div><strong>Hash 1:</strong> <span id="h1" class="hash-cell"></span></div>
+                <div style="margin-top: 0.5rem;"><strong>Hash 2:</strong> <span id="h2" class="hash-cell"></span></div>
+            </div>
+
+            <!-- Explicação solicitada no slide 25 -->
+            <div class="callout">
+                <strong>💡 Por que isso verifica igualdade de bytes, mas NÃO prova autoria?</strong><br>
+                O algoritmo SHA-256 é estritamente determinístico: qualquer pessoa no mundo que processar a mesma sequência de bytes produzirá exatamente o mesmo hash. Ele prova apenas que os dados não sofreram alterações em trânsito (<strong>integridade</strong>), mas não carrega nenhuma chave secreta ou assinatura que vincule a mensagem a uma identidade (<strong>autenticidade</strong>). Um invasor pode alterar o texto, calcular o novo SHA-256 e enviar em nome de outra pessoa sem que o hash por si só consiga alertar sobre o autor.
+            </div>
+        </div>
+    </div>
+
+    <script src="pratica_guiada_slide25.js"></script>
+    <script>
+        function carregarTexto(texto) {
+            document.getElementById("inputTexto").value = texto;
+            gerarHashUnico();
+        }
+
+        async function gerarHashUnico() {
+            const txt = document.getElementById("inputTexto").value;
+            const hash = await calcularSHA256(txt);
+            document.getElementById("resultadoHash").textContent = hash;
+        }
+
+        async function preencherTabela() {
+            const dados = await executarTestesPredefinidos();
+            const tbody = document.getElementById("tabelaTestes");
+            tbody.innerHTML = dados.map(item => `
+                <tr>
+                    <td><strong>${item.entrada}</strong></td>
+                    <td class="hash-cell">${item.hash}</td>
+                    <td>${item.tamanhoHex} chars (256 bits)</td>
+                </tr>
+            `).join("");
+        }
+
+        async function executarComparacao() {
+            const v1 = document.getElementById("input1").value;
+            const v2 = document.getElementById("input2").value;
+            const res = await compararHashes(v1, v2);
+
+            document.getElementById("h1").textContent = res.hash1;
+            document.getElementById("h2").textContent = res.hash2;
+
+            const pill = document.getElementById("resultadoComparacao");
+            if (res.saoIguais) {
+                pill.className = "status-pill equal";
+                pill.textContent = "✔ HASHES IGUAIS (Conteúdo de bytes 100% idêntico)";
+            } else {
+                pill.className = "status-pill diff";
+                pill.textContent = "✖ HASHES DIFERENTES (Ao menos 1 bit foi alterado)";
+            }
+        }
+
+        // Inicialização
+        gerarHashUnico();
+        preencherTabela();
+        executarComparacao();
+    </script>
+</body>
+</html>

@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laboratório Criptográfico - Projeto Final Slide 40</title>
+    <style>
+        :root {
+            --bg-main: #0b0f19;
+            --bg-card: #151f32;
+            --bg-input: #090d16;
+            --primary: #38bdf8;
+            --primary-hover: #0ea5e9;
+            --secondary: #818cf8;
+            --border: #223249;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --success: #34d399;
+            --danger: #f87171;
+            --warning: #fbbf24;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
+        body { background-color: var(--bg-main); color: var(--text-main); padding: 2rem 1rem; display: flex; justify-content: center; }
+        .wrapper { max-width: 1050px; width: 100%; display: flex; flex-direction: column; gap: 2rem; }
+
+        header { text-align: center; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border); }
+        header h1 { font-size: 2.2rem; color: var(--primary); margin-bottom: 0.5rem; }
+        header p { color: var(--text-muted); font-size: 1rem; }
+
+        .nav-tabs { display: flex; gap: 0.75rem; background: var(--bg-card); padding: 0.5rem; border-radius: 12px; border: 1px solid var(--border); overflow-x: auto; }
+        .tab-btn { flex: 1; padding: 0.85rem 1rem; background: transparent; border: none; color: var(--text-muted); font-size: 0.95rem; font-weight: 600; border-radius: 8px; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
+        .tab-btn:hover { color: var(--text-main); background: rgba(255, 255, 255, 0.05); }
+        .tab-btn.active { background: var(--primary); color: #0b0f19; box-shadow: 0 4px 12px rgba(56, 189, 248, 0.3); }
+
+        .module-card { display: none; background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 2.2rem; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); }
+        .module-card.active { display: block; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+        h2 { font-size: 1.5rem; color: var(--primary); margin-bottom: 0.4rem; }
+        .module-desc { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1.5rem; }
+
+        .form-group { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1.2rem; }
+        label { font-size: 0.88rem; font-weight: 600; color: var(--text-muted); }
+        input[type="text"], textarea { width: 100%; padding: 0.85rem 1.1rem; background: var(--bg-input); border: 1px solid var(--border); border-radius: 10px; color: #fff; font-size: 1rem; outline: none; }
+        input[type="text"]:focus, textarea:focus { border-color: var(--primary); }
+        textarea { resize: vertical; height: 90px; }
+
+        .btn-row { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
+        button.action-btn { padding: 0.75rem 1.4rem; border-radius: 8px; font-size: 0.95rem; font-weight: 600; cursor: pointer; border: none; transition: all 0.2s; display: inline-flex; align-items: center; gap: 0.5rem; }
+        .btn-primary { background: var(--primary); color: #0b0f19; }
+        .btn-primary:hover { background: var(--primary-hover); }
+        .btn-secondary { background: #1e293b; color: var(--text-main); border: 1px solid var(--border); }
+        .btn-secondary:hover { background: #334155; }
+        .btn-danger { background: rgba(248, 113, 113, 0.2); color: var(--danger); border: 1px solid var(--danger); }
+        .btn-danger:hover { background: var(--danger); color: #0b0f19; }
+
+        .result-panel { background: var(--bg-input); border: 1px solid var(--border); border-radius: 12px; padding: 1.4rem; margin-top: 1rem; }
+        .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-bottom: 1.2rem; }
+        .info-chip { background: #0f172a; border: 1px solid var(--border); padding: 0.7rem 1rem; border-radius: 8px; }
+        .info-chip .label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 0.2rem; }
+        .info-chip .val { font-size: 1.1rem; font-weight: 700; color: var(--text-main); }
+
+        .hash-output-wrapper { position: relative; background: #0d1524; border: 1px solid var(--border); border-radius: 8px; padding: 1rem; }
+        .hash-code { font-family: monospace; font-size: 0.9rem; color: var(--success); word-break: break-all; padding-right: 5rem; }
+        .copy-btn { position: absolute; top: 50%; right: 0.75rem; transform: translateY(-50%); padding: 0.45rem 0.85rem; font-size: 0.8rem; font-weight: 600; background: #1e293b; color: var(--primary); border: 1px solid var(--border); border-radius: 6px; cursor: pointer; }
+        .copy-btn:hover { background: var(--primary); color: #0b0f19; }
+
+        .bit-matrix { display: grid; grid-template-columns: repeat(32, 1fr); gap: 2.5px; margin: 1.2rem 0; background: #090d16; padding: 1rem; border-radius: 10px; border: 1px solid var(--border); }
+        .bit-dot { aspect-ratio: 1; border-radius: 2px; background: #334155; }
+        .bit-dot.divergente { background: var(--danger); box-shadow: 0 0 3px var(--danger); }
+        .bit-dot.igual { background: var(--success); }
+
+        .integrity-banner { padding: 1.2rem; border-radius: 10px; font-size: 1.25rem; font-weight: 800; text-align: center; letter-spacing: 0.05em; margin-top: 1rem; }
+        .integrity-banner.ok { background: rgba(52, 211, 153, 0.15); color: var(--success); border: 1px solid var(--success); }
+        .integrity-banner.err { background: rgba(248, 113, 113, 0.15); color: var(--danger); border: 1px solid var(--danger); }
+
+        .attack-box { background: #1e1b2e; border: 1px solid #6b21a8; border-radius: 10px; padding: 1.2rem; margin-top: 1.2rem; }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <header>
+            <h1>Laboratório Criptográfico 🔐</h1>
+            <p>Projeto Final Prático (Slide 40) — Web Crypto API 100% Nativa</p>
+        </header>
+
+        <nav class="nav-tabs">
+            <button class="tab-btn active" onclick="trocarAba(0)">1. SHA-256 / SHA-512</button>
+            <button class="tab-btn" onclick="trocarAba(1)">2. Efeito Avalanche</button>
+            <button class="tab-btn" onclick="trocarAba(2)">3. Verificador de Integridade</button>
+            <button class="tab-btn" onclick="trocarAba(3)">4. Comparação com HMAC</button>
+        </nav>
+
+        <!-- MÓDULO 1 -->
+        <section class="module-card active" id="modulo1">
+            <h2>Módulo 1: SHA-256 & SHA-512</h2>
+            <p class="module-desc">Geração de resumos com entrada, tamanho em bytes, algoritmo e saída hex.</p>
+            <div class="form-group">
+                <label for="m1_input">Entrada de Texto:</label>
+                <textarea id="m1_input" placeholder="Digite uma mensagem...">Professor Celso</textarea>
+            </div>
+            <div class="btn-row">
+                <button class="action-btn btn-primary" onclick="m1_calcular('SHA-256')">SHA-256 (256 bits)</button>
+                <button class="action-btn btn-primary" style="background: var(--secondary);" onclick="m1_calcular('SHA-512')">SHA-512 (512 bits)</button>
+                <button class="action-btn btn-danger" onclick="m1_limpar()">Limpar</button>
+            </div>
+            <div class="result-panel">
+                <div class="info-grid">
+                    <div class="info-chip"><div class="label">Algoritmo</div><div class="val" id="m1_alg">-</div></div>
+                    <div class="info-chip"><div class="label">Tamanho em Bytes UTF-8</div><div class="val" id="m1_bytes">-</div></div>
+                    <div class="info-chip"><div class="label">Caracteres Hexadecimais</div><div class="val" id="m1_chars">-</div></div>
+                    <div class="info-chip"><div class="label">Comprimento em Bits</div><div class="val" id="m1_bits">-</div></div>
+                </div>
+                <div class="hash-output-wrapper">
+                    <div class="hash-code" id="m1_hash">Aguardando geração do hash...</div>
+                    <button class="copy-btn" onclick="copiarTexto('m1_hash')">Copiar</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- MÓDULO 2 -->
+        <section class="module-card" id="modulo2">
+            <h2>Módulo 2: Investigação do Efeito Avalanche</h2>
+            <p class="module-desc">Comparação bit a bit demonstrando variação drástica no hash.</p>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.2rem;">
+                <div class="form-group">
+                    <label for="m2_inA">Entrada A:</label>
+                    <input type="text" id="m2_inA" value="SEGURANCA2026" oninput="m2_analisar()">
+                </div>
+                <div class="form-group">
+                    <label for="m2_inB">Entrada B:</label>
+                    <input type="text" id="m2_inB" value="SEGURANCA2027" oninput="m2_analisar()">
+                </div>
+            </div>
+            <div class="btn-row">
+                <button class="action-btn btn-secondary" onclick="m2_setPreset('SEGURANCA2026', 'SEGURANCA2027')">Preset da Aula</button>
+                <button class="action-btn btn-danger" onclick="m2_limpar()">Limpar</button>
+            </div>
+            <div class="result-panel">
+                <div class="info-grid">
+                    <div class="info-chip"><div class="label">Bits Divergentes</div><div class="val" style="color: var(--danger);" id="m2_bitsDiff">-</div></div>
+                    <div class="info-chip"><div class="label">Porcentagem de Diferença</div><div class="val" style="color: var(--primary);" id="m2_pctDiff">-</div></div>
+                    <div class="info-chip"><div class="label">Chars Hex Divergentes</div><div class="val" id="m2_hexDiff">-</div></div>
+                </div>
+                <div class="bit-matrix" id="m2_matrix"></div>
+                <div class="hash-output-wrapper" style="margin-bottom: 0.6rem;">
+                    <div class="hash-code" id="m2_hashA">-</div>
+                    <button class="copy-btn" onclick="copiarTexto('m2_hashA')">Copiar A</button>
+                </div>
+                <div class="hash-output-wrapper">
+                    <div class="hash-code" id="m2_hashB">-</div>
+                    <button class="copy-btn" onclick="copiarTexto('m2_hashB')">Copiar B</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- MÓDULO 3 -->
+        <section class="module-card" id="modulo3">
+            <h2>Módulo 3: Verificador de Integridade</h2>
+            <p class="module-desc">Detecta espaços, maiúsculas/minúsculas, acentos e quebras de linha.</p>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.2rem;">
+                <div class="form-group">
+                    <label for="m3_orig">Conteúdo Original:</label>
+                    <textarea id="m3_orig" oninput="m3_verificar()">Contrato de Licenciamento 2026</textarea>
+                    <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.3rem;" id="m3_metaOrig">0 bytes</div>
+                </div>
+                <div class="form-group">
+                    <label for="m3_rec">Conteúdo Recebido:</label>
+                    <textarea id="m3_rec" oninput="m3_verificar()">Contrato de Licenciamento 2026</textarea>
+                    <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.3rem;" id="m3_metaRec">0 bytes</div>
+                </div>
+            </div>
+            <div class="btn-row">
+                <button class="action-btn btn-secondary" onclick="m3_alterar('espaco')">+ Espaço</button>
+                <button class="action-btn btn-secondary" onclick="m3_alterar('case')">Minúscula</button>
+                <button class="action-btn btn-secondary" onclick="m3_alterar('acento')">Acentuação</button>
+                <button class="action-btn btn-danger" onclick="m3_limpar()">Limpar</button>
+            </div>
+            <div class="integrity-banner ok" id="m3_banner">INTEGRIDADE CONFIRMADA</div>
+            <div class="result-panel">
+                <div class="hash-output-wrapper" style="margin-bottom: 0.6rem;">
+                    <div class="hash-code" id="m3_hashOrig">-</div>
+                    <button class="copy-btn" onclick="copiarTexto('m3_hashOrig')">Copiar</button>
+                </div>
+                <div class="hash-output-wrapper">
+                    <div class="hash-code" id="m3_hashRec">-</div>
+                    <button class="copy-btn" onclick="copiarTexto('m3_hashRec')">Copiar</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- MÓDULO 4 -->
+        <section class="module-card" id="modulo4">
+            <h2>Módulo 4: Comparação com HMAC</h2>
+            <p class="module-desc">Vulnerabilidade do hash simples vs autenticidade do HMAC-SHA-256 com chave.</p>
+            <div class="form-group">
+                <label for="m4_msg">Mensagem da Transação:</label>
+                <input type="text" id="m4_msg" value='{"transferencia": 100, "favorecido": "Celso"}'>
+            </div>
+            <div class="form-group">
+                <label for="m4_key">Chave Secreta:</label>
+                <input type="text" id="m4_key" value="chave-secreta-2026">
+            </div>
+            <div class="btn-row">
+                <button class="action-btn btn-primary" onclick="m4_executarCalculo()">Calcular</button>
+                <button class="action-btn btn-danger" onclick="m4_limpar()">Limpar</button>
+            </div>
+            <div class="result-panel">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                    <div>
+                        <h3 style="color: var(--danger); font-size: 1.1rem; margin-bottom: 0.5rem;">Hash Simples</h3>
+                        <div class="hash-output-wrapper"><div class="hash-code" id="m4_hashSimples">-</div></div>
+                    </div>
+                    <div>
+                        <h3 style="color: var(--success); font-size: 1.1rem; margin-bottom: 0.5rem;">HMAC-SHA-256</h3>
+                        <div class="hash-output-wrapper"><div class="hash-code" id="m4_hmacTag">-</div></div>
+                    </div>
+                </div>
+                <div class="attack-box">
+                    <strong style="color: var(--warning);">⚡ Simulação de Ataque Man-in-the-Middle:</strong>
+                    <button class="action-btn btn-primary" style="background: var(--warning); color: #0b0f19; margin-top: 0.5rem;" onclick="m4_simularAtaque()">
+                        Simular Alteração para R$ 90.000
+                    </button>
+                    <div id="m4_ataqueLog" style="margin-top: 0.8rem; font-size: 0.88rem;"></div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        const encoder = new TextEncoder();
+
+        async function digest(algoritmo, str) {
+            const buffer = await crypto.subtle.digest(algoritmo, encoder.encode(str));
+            return Array.from(new Uint8Array(buffer)).map(b => b.toString(16).padStart(2, "0")).join("");
+        }
+
+        async function hmacSha256(mensagem, chaveSecreta) {
+            const keyData = encoder.encode(chaveSecreta);
+            const cryptoKey = await crypto.subtle.importKey(
+                "raw", keyData, { name: "HMAC", hash: { name: "SHA-256" } }, false, ["sign"]
+            );
+            const signature = await crypto.subtle.sign("HMAC", cryptoKey, encoder.encode(mensagem));
+            return Array.from(new Uint8Array(signature)).map(b => b.toString(16).padStart(2, "0")).join("");
+        }
+
+        function trocarAba(index) {
+            document.querySelectorAll(".tab-btn").forEach((btn, i) => btn.classList.toggle("active", i === index));
+            document.querySelectorAll(".module-card").forEach((card, i) => card.classList.toggle("active", i === index));
+        }
+
+        async function m1_calcular(algoritmo) {
+            const txt = document.getElementById("m1_input").value;
+            const bytes = encoder.encode(txt).length;
+            const hash = await digest(algoritmo, txt);
+            document.getElementById("m1_alg").textContent = algoritmo;
+            document.getElementById("m1_bytes").textContent = `${bytes} bytes`;
+            document.getElementById("m1_chars").textContent = `${hash.length} hex`;
+            document.getElementById("m1_bits").textContent = algoritmo === "SHA-256" ? "256 bits" : "512 bits";
+            document.getElementById("m1_hash").textContent = hash;
+        }
+
+        function m1_limpar() {
+            document.getElementById("m1_input").value = "";
+            document.getElementById("m1_hash").textContent = "Aguardando geração do hash...";
+        }
+
+        function hexToBin(hex) {
+            return hex.split("").map(h => parseInt(h, 16).toString(2).padStart(4, "0")).join("");
+        }
+
+        async function m2_analisar() {
+            const a = document.getElementById("m2_inA").value;
+            const b = document.getElementById("m2_inB").value;
+            const hashA = await digest("SHA-256", a);
+            const hashB = await digest("SHA-256", b);
+            const binA = hexToBin(hashA);
+            const binB = hexToBin(hashB);
+
+            let diffBits = 0, diffHex = 0;
+            const matrix = document.getElementById("m2_matrix");
+            matrix.innerHTML = "";
+
+            for (let i = 0; i < 256; i++) {
+                const diferente = binA[i] !== binB[i];
+                if (diferente) diffBits++;
+                const dot = document.createElement("div");
+                dot.className = `bit-dot ${diferente ? 'divergente' : 'igual'}`;
+                matrix.appendChild(dot);
+            }
+            for (let i = 0; i < 64; i++) if (hashA[i] !== hashB[i]) diffHex++;
+
+            document.getElementById("m2_hashA").textContent = hashA;
+            document.getElementById("m2_hashB").textContent = hashB;
+            document.getElementById("m2_bitsDiff").textContent = `${diffBits} / 256`;
+            document.getElementById("m2_pctDiff").textContent = `${((diffBits / 256) * 100).toFixed(2)}%`;
+            document.getElementById("m2_hexDiff").textContent = `${diffHex} / 64`;
+        }
+
+        function m2_setPreset(a, b) {
+            document.getElementById("m2_inA").value = a;
+            document.getElementById("m2_inB").value = b;
+            m2_analisar();
+        }
+
+        function m2_limpar() {
+            document.getElementById("m2_inA").value = "";
+            document.getElementById("m2_inB").value = "";
+            m2_analisar();
+        }
+
+        async function m3_verificar() {
+            const orig = document.getElementById("m3_orig").value;
+            const rec = document.getElementById("m3_rec").value;
+            const hOrig = await digest("SHA-256", orig);
+            const hRec = await digest("SHA-256", rec);
+            document.getElementById("m3_metaOrig").textContent = `${encoder.encode(orig).length} bytes`;
+            document.getElementById("m3_metaRec").textContent = `${encoder.encode(rec).length} bytes`;
+            document.getElementById("m3_hashOrig").textContent = hOrig;
+            document.getElementById("m3_hashRec").textContent = hRec;
+
+            const banner = document.getElementById("m3_banner");
+            if (hOrig === hRec) {
+                banner.className = "integrity-banner ok";
+                banner.textContent = "✔ INTEGRIDADE CONFIRMADA";
+            } else {
+                banner.className = "integrity-banner err";
+                banner.textContent = "✖ CONTEÚDO ALTERADO";
+            }
+        }
+
+        function m3_alterar(tipo) {
+            const orig = document.getElementById("m3_orig").value;
+            let alterado = orig;
+            if (tipo === 'espaco') alterado += " ";
+            if (tipo === 'case') alterado = orig.toLowerCase();
+            if (tipo === 'acento') alterado = orig.replace(/a/g, "ã");
+            document.getElementById("m3_rec").value = alterado;
+            m3_verificar();
+        }
+
+        function m3_limpar() {
+            document.getElementById("m3_orig").value = "";
+            document.getElementById("m3_rec").value = "";
+            m3_verificar();
+        }
+
+        async function m4_executarCalculo() {
+            const msg = document.getElementById("m4_msg").value;
+            const key = document.getElementById("m4_key").value;
+            document.getElementById("m4_hashSimples").textContent = await digest("SHA-256", msg);
+            document.getElementById("m4_hmacTag").textContent = await hmacSha256(msg, key);
+        }
+
+        async function m4_simularAtaque() {
+            const msgFraudada = '{"transferencia": 90000, "favorecido": "Invasor"}';
+            const novoHashSimples = await digest("SHA-256", msgFraudada);
+            document.getElementById("m4_ataqueLog").innerHTML = `
+                <div style="color: var(--danger); margin-bottom: 0.3rem;">
+                    ❌ <strong>Hash Simples:</strong> Invasor recalculou sem chave: <code>${novoHashSimples.substring(0, 16)}...</code> (Vítima aceitaria).
+                </div>
+                <div style="color: var(--success);">
+                    ✔ <strong>HMAC-SHA-256:</strong> Invasor não tem a chave secreta. O receptor <strong>REJEITA A TRANSAÇÃO</strong>!
+                </div>
+            `;
+        }
+
+        function m4_limpar() {
+            document.getElementById("m4_msg").value = "";
+            document.getElementById("m4_hashSimples").textContent = "-";
+            document.getElementById("m4_hmacTag").textContent = "-";
+            document.getElementById("m4_ataqueLog").innerHTML = "";
+        }
+
+        function copiarTexto(id) {
+            navigator.clipboard.writeText(document.getElementById(id).textContent);
+            alert("Copiado para a área de transferência!");
+        }
+
+        m1_calcular('SHA-256');
+        m2_analisar();
+        m3_verificar();
+        m4_executarCalculo();
+    </script>
+</body>
+</html>
