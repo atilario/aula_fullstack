@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slide 31 - Exercício 6: Botão com argumento de cor</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            transition: background-color 0.3s ease;
+        }
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 2.5rem;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+            text-align: center;
+        }
+        h2 {
+            margin-top: 0;
+            color: #1f2937;
+        }
+        .botoes {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 1.5rem;
+        }
+        button {
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.2s, opacity 0.2s;
+        }
+        button:hover {
+            transform: scale(1.05);
+            opacity: 0.9;
+        }
+        .btn-coral { background: #ff7675; color: white; }
+        .btn-azul { background: #74b9ff; color: white; }
+        .btn-verde { background: #55efc4; color: #2d3436; }
+        .btn-amarelo { background: #ffeaa7; color: #2d3436; }
+        .btn-roxo { background: #a29bfe; color: white; }
+        .btn-reset { background: #dfe6e9; color: #2d3436; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>Exercício 6: Botões com Argumento de Cor</h2>
+        <p>Clique em um botão para alterar a cor de fundo:</p>
+
+        <div class="botoes">
+            <button class="btn-coral" onclick="alterarCorFundo('#ff7675')">Coral</button>
+            <button class="btn-azul" onclick="alterarCorFundo('#74b9ff')">Azul</button>
+            <button class="btn-verde" onclick="alterarCorFundo('#55efc4')">Verde</button>
+            <button class="btn-amarelo" onclick="alterarCorFundo('#ffeaa7')">Amarelo</button>
+            <button class="btn-roxo" onclick="alterarCorFundo('#a29bfe')">Roxo</button>
+            <button class="btn-reset" onclick="alterarCorFundo('#f8fafc')">Restaurar</button>
+        </div>
+    </div>
+
+    <script>
+        // Função que recebe uma cor como parâmetro e altera o fundo do body
+        function alterarCorFundo(cor) {
+            document.body.style.backgroundColor = cor;
+            console.log('Cor alterada para:', cor);
+        }
+    </script>
+</body>
+</html>

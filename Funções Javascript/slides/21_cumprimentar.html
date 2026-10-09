@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slide 27 - Formulário: nome e mensagem</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f8fafc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .card {
+            background: #ffffff;
+            padding: 2.5rem;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+            width: 350px;
+            text-align: center;
+        }
+        h2 {
+            margin-top: 0;
+            color: #1e293b;
+            font-size: 1.35rem;
+        }
+        input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 1rem;
+            box-sizing: border-box;
+            margin-bottom: 1rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        input:focus {
+            border-color: #3b82f6;
+        }
+        button {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        button:hover {
+            background-color: #2563eb;
+        }
+        #saida {
+            margin-top: 1.5rem;
+            font-weight: 600;
+            color: #0f172a;
+            min-height: 24px;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>Formulário: Nome e Mensagem</h2>
+        <!-- HTML do slide 27 -->
+        <input id="nome" placeholder="Digite seu nome">
+        <button onclick="cumprimentar()">Enviar</button>
+        <p id="saida"></p>
+    </div>
+
+    <script src="21_cumprimentar.js"></script>
+</body>
+</html>

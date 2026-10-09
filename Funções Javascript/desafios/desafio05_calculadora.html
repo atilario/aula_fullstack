@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slide 32 - Desafio 5: Calculadora com Parâmetro</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            color: #f8fafc;
+        }
+
+        .calc-card {
+            background: rgba(30, 41, 59, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2.5rem;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        h2 {
+            font-size: 1.6rem;
+            text-align: center;
+            margin-bottom: 0.5rem;
+            color: #38bdf8;
+        }
+
+        p.subtitle {
+            text-align: center;
+            font-size: 0.9rem;
+            color: #94a3b8;
+            margin-bottom: 2rem;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+            margin-bottom: 1.8rem;
+        }
+
+        .input-box label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 0.4rem;
+            color: #cbd5e1;
+        }
+
+        .input-box input {
+            width: 100%;
+            padding: 0.85rem 1rem;
+            background: #0f172a;
+            border: 1.5px solid #334155;
+            border-radius: 10px;
+            color: #fff;
+            font-size: 1.1rem;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .input-box input:focus {
+            border-color: #38bdf8;
+            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2);
+        }
+
+        .btn-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.75rem;
+            margin-bottom: 1.8rem;
+        }
+
+        .op-btn {
+            background: #1e3a8a;
+            color: #e0f2fe;
+            border: none;
+            padding: 1rem 0;
+            border-radius: 12px;
+            font-size: 1.4rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .op-btn:hover {
+            background: #2563eb;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(37, 99, 235, 0.35);
+        }
+
+        .op-btn:active {
+            transform: translateY(0);
+        }
+
+        .resultado-box {
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 1.2rem;
+            text-align: center;
+        }
+
+        .resultado-label {
+            font-size: 0.8rem;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.3rem;
+        }
+
+        .resultado-valor {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #4ade80;
+            min-height: 2rem;
+            word-break: break-all;
+        }
+
+        .resultado-valor.erro {
+            color: #f87171;
+            font-size: 1.1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="calc-card">
+        <h2>Calculadora Dinâmica</h2>
+        <p class="subtitle">Escolha da operação por parâmetro</p>
+
+        <div class="input-group">
+            <div class="input-box">
+                <label for="num1">Primeiro Número</label>
+                <input type="number" id="num1" placeholder="Ex: 15" step="any">
+            </div>
+            <div class="input-box">
+                <label for="num2">Segundo Número</label>
+                <input type="number" id="num2" placeholder="Ex: 5" step="any">
+            </div>
+        </div>
+
+        <!-- Botões passando a operação por parâmetro -->
+        <div class="btn-grid">
+            <button class="op-btn" onclick="executarCalculo('+')" title="Somar">+</button>
+            <button class="op-btn" onclick="executarCalculo('-')" title="Subtrair">−</button>
+            <button class="op-btn" onclick="executarCalculo('*')" title="Multiplicar">×</button>
+            <button class="op-btn" onclick="executarCalculo('/')" title="Dividir">÷</button>
+        </div>
+
+        <div class="resultado-box">
+            <div class="resultado-label">Resultado</div>
+            <div class="resultado-valor" id="resultado">Informe os valores</div>
+        </div>
+    </div>
+
+    <script>
+        // Função com parâmetro para executar a operação aritmética
+        function calcular(n1, n2, operacao) {
+            switch (operacao) {
+                case '+':
+                    return n1 + n2;
+                case '-':
+                    return n1 - n2;
+                case '*':
+                    return n1 * n2;
+                case '/':
+                    if (n2 === 0) {
+                        return 'Não é possível dividir por zero.';
+                    }
+                    return n1 / n2;
+                default:
+                    return 'Operação inválida.';
+            }
+        }
+
+        // Função que lê os dados dos inputs e chama calcular(n1, n2, operacao)
+        function executarCalculo(operacao) {
+            const val1 = document.getElementById('num1').value;
+            const val2 = document.getElementById('num2').value;
+            const resElement = document.getElementById('resultado');
+
+            if (val1 === '' || val2 === '') {
+                resElement.className = 'resultado-valor erro';
+                resElement.textContent = 'Preencha ambos os campos!';
+                return;
+            }
+
+            const n1 = parseFloat(val1);
+            const n2 = parseFloat(val2);
+
+            const resultado = calcular(n1, n2, operacao);
+
+            if (typeof resultado === 'string') {
+                resElement.className = 'resultado-valor erro';
+                resElement.textContent = resultado;
+            } else {
+                resElement.className = 'resultado-valor';
+                resElement.textContent = `${n1} ${operacao} ${n2} = ${resultado}`;
+            }
+        }
+    </script>
+</body>
+</html>
