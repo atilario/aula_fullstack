@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { getEmailUrl, openEmailCompose, isMobileDevice } from "../utils/emailHelper";
 
 function ContactSection({ contact, personal }) {
   const [copiedEmail, setCopiedEmail] = useState(false);
@@ -89,11 +90,12 @@ function ContactSection({ contact, personal }) {
               <div className="contact-card-info">
                 <span className="contact-card-label">{contact.emailLabel}</span>
                 <a
-                  href={personal.social.gmailUrl || `https://mail.google.com/mail/?view=cm&fs=1&to=${personal.social.email}`}
-                  target="_blank"
+                  href={getEmailUrl(personal.social.email)}
+                  onClick={(e) => openEmailCompose(personal.social.email, e)}
+                  target={isMobileDevice() ? "_self" : "_blank"}
                   rel="noopener noreferrer"
                   className="contact-card-value"
-                  title="Open directly in Gmail"
+                  title="Send email"
                 >
                   {personal.social.email}
                 </a>
@@ -101,14 +103,15 @@ function ContactSection({ contact, personal }) {
               </div>
               <div className="contact-card-actions">
                 <a
-                  href={personal.social.gmailUrl || `https://mail.google.com/mail/?view=cm&fs=1&to=${personal.social.email}`}
-                  target="_blank"
+                  href={getEmailUrl(personal.social.email)}
+                  onClick={(e) => openEmailCompose(personal.social.email, e)}
+                  target={isMobileDevice() ? "_self" : "_blank"}
                   rel="noopener noreferrer"
                   className="btn-contact-action primary"
-                  title="Open directly in Gmail"
+                  title="Send email"
                 >
                   <i className="fa-solid fa-arrow-up-right-from-square"></i>
-                  <span>{contact.emailAction || "Open in Gmail"}</span>
+                  <span>{contact.emailAction || "Send Email"}</span>
                 </a>
                 <button
                   onClick={handleCopyEmail}

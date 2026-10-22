@@ -1,3 +1,5 @@
+import { getEmailUrl, openEmailCompose, isMobileDevice } from "../utils/emailHelper";
+
 function Footer({ footer, personal }) {
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -16,12 +18,13 @@ function Footer({ footer, personal }) {
 
           <div className="footer-social-links">
             <a
-              href={personal.social.gmailUrl || `https://mail.google.com/mail/?view=cm&fs=1&to=${personal.social.email}`}
-              target="_blank"
+              href={getEmailUrl(personal.social.email)}
+              onClick={(e) => openEmailCompose(personal.social.email, e)}
+              target={isMobileDevice() ? "_self" : "_blank"}
               rel="noopener noreferrer"
               className="footer-icon-link"
-              title="Gmail"
-              aria-label="Email Átila via Gmail"
+              title="Email"
+              aria-label="Email Átila"
             >
               <i className="fa-regular fa-envelope"></i>
             </a>

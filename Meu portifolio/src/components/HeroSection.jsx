@@ -1,3 +1,5 @@
+import { getEmailUrl, openEmailCompose, isMobileDevice } from "../utils/emailHelper";
+
 function HeroSection({ personal, hero, lang }) {
   return (
     <section id="inicio" className="hero-section">
@@ -36,12 +38,13 @@ function HeroSection({ personal, hero, lang }) {
 
             <div className="hero-social-links">
               <a
-                href={personal.social.gmailUrl || `https://mail.google.com/mail/?view=cm&fs=1&to=${personal.social.email}`}
-                target="_blank"
+                href={getEmailUrl(personal.social.email)}
+                onClick={(e) => openEmailCompose(personal.social.email, e)}
+                target={isMobileDevice() ? "_self" : "_blank"}
                 rel="noopener noreferrer"
                 className="social-link-btn"
-                title="Send an Email via Gmail"
-                aria-label="Gmail"
+                title="Send an Email"
+                aria-label="Email"
               >
                 <i className="fa-regular fa-envelope"></i>
                 <span className="social-link-text">{personal.social.email}</span>
