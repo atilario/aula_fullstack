@@ -37,9 +37,11 @@ function ContactSection({ contact, personal }) {
               <div className="contact-card-info">
                 <span className="contact-card-label">{contact.emailLabel}</span>
                 <a
-                  href={`mailto:${personal.social.email}`}
+                  href={personal.social.gmailUrl || `https://mail.google.com/mail/?view=cm&fs=1&to=${personal.social.email}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="contact-card-value"
-                  title="Send an email"
+                  title="Open directly in Gmail"
                 >
                   {personal.social.email}
                 </a>
@@ -47,11 +49,14 @@ function ContactSection({ contact, personal }) {
               </div>
               <div className="contact-card-actions">
                 <a
-                  href={`mailto:${personal.social.email}`}
+                  href={personal.social.gmailUrl || `https://mail.google.com/mail/?view=cm&fs=1&to=${personal.social.email}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="btn-contact-action primary"
+                  title="Open directly in Gmail"
                 >
                   <i className="fa-solid fa-arrow-up-right-from-square"></i>
-                  <span>{contact.emailAction || "Send Email"}</span>
+                  <span>{contact.emailAction || "Open in Gmail"}</span>
                 </a>
                 <button
                   onClick={handleCopyEmail}

@@ -12,6 +12,7 @@ export const portfolioData = {
       ],
       social: {
         email: "atilalmmascarenhas@gmail.com",
+        gmailUrl: "https://mail.google.com/mail/?view=cm&fs=1&to=atilalmmascarenhas@gmail.com",
         github: "https://github.com/atilario",
         linkedin: "https://www.linkedin.com/in/amcomp/"
       },
@@ -292,8 +293,9 @@ export const portfolioData = {
       subtitle: "Interested in collaboration, engineering projects, or career opportunities? Connect directly with me.",
       infoTitle: "Let's Connect",
       infoDesc: "I am actively seeking internship opportunities, research collaborations, and engineering challenges. Feel free to reach out directly through any of the channels below:",
-      emailLabel: "Email Address",
-      emailDesc: "Send a direct email message",
+      emailLabel: "Email (Gmail)",
+      emailDesc: "Click to compose message directly in Gmail",
+      emailAction: "Open in Gmail",
       copyEmail: "Copy Email",
       copied: "Copied!",
       linkedinLabel: "LinkedIn Profile",
@@ -327,6 +329,7 @@ export const portfolioData = {
       ],
       social: {
         email: "atilalmmascarenhas@gmail.com",
+        gmailUrl: "https://mail.google.com/mail/?view=cm&fs=1&to=atilalmmascarenhas@gmail.com",
         github: "https://github.com/atilario",
         linkedin: "https://www.linkedin.com/in/amcomp/"
       },
@@ -607,8 +610,9 @@ export const portfolioData = {
       subtitle: "Interessado em colaborar em projetos de engenharia, pesquisas acadêmicas ou oportunidades profissionais? Entre em contato!",
       infoTitle: "Informações de Contato",
       infoDesc: "Estou sempre aberto a novas conexões, parcerias em projetos de dados/engenharia e oportunidades de estágio. Fique à vontade para entrar em contato diretamente pelos canais abaixo:",
-      emailLabel: "E-mail",
-      emailDesc: "Envie um e-mail direto",
+      emailLabel: "E-mail (Gmail)",
+      emailDesc: "Clique para abrir a tela de envio direto no Gmail",
+      emailAction: "Abrir no Gmail",
       copyEmail: "Copiar E-mail",
       copied: "Copiado!",
       linkedinLabel: "Perfil no LinkedIn",

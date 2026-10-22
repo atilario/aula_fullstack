@@ -16,10 +16,12 @@ function Footer({ footer, personal }) {
 
           <div className="footer-social-links">
             <a
-              href={`mailto:${personal.social.email}`}
+              href={personal.social.gmailUrl || `https://mail.google.com/mail/?view=cm&fs=1&to=${personal.social.email}`}
+              target="_blank"
+              rel="noopener noreferrer"
               className="footer-icon-link"
-              title="Email"
-              aria-label="Email Átila"
+              title="Gmail"
+              aria-label="Email Átila via Gmail"
             >
               <i className="fa-regular fa-envelope"></i>
             </a>

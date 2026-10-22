@@ -29,10 +29,12 @@ function HeroSection({ personal, hero, lang }) {
 
             <div className="hero-social-links">
               <a
-                href={`mailto:${personal.social.email}`}
+                href={personal.social.gmailUrl || `https://mail.google.com/mail/?view=cm&fs=1&to=${personal.social.email}`}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="social-link-btn"
-                title="Send an Email"
-                aria-label="Email"
+                title="Send an Email via Gmail"
+                aria-label="Gmail"
               >
                 <i className="fa-regular fa-envelope"></i>
                 <span className="social-link-text">{personal.social.email}</span>
