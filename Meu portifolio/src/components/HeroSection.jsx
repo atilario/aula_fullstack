@@ -1,37 +1,71 @@
-function HeroSection({ personal }) {
+function HeroSection({ personal, hero, lang }) {
   return (
-    <section id="inicio" className="hero">
+    <section id="inicio" className="hero-section">
       <div className="container">
         <div className="hero-grid">
           <div className="hero-content">
-            <div className="hero-status">
+            <div className="hero-badge">
               <span className="status-indicator"></span>
-              {personal.institution} • {personal.stats[0].number} Semestre
+              <span>{hero.status}</span>
             </div>
 
             <h1 className="hero-title">
-              Olá, eu sou <br />
-              <span className="gradient-text">{personal.name}</span>
+              {hero.greeting} <br />
+              <span className="hero-name">{hero.name}</span>
             </h1>
 
             <p className="hero-description">
-              Estudante de Engenharia da Computação com foco em <strong>Data Science</strong>, <strong>Machine Learning</strong>, <strong>Desenvolvimento Full Stack</strong> e <strong>Sistemas Embarcados</strong>.
+              {hero.description}
             </p>
 
             <div className="hero-actions">
               <a href="#projetos" className="btn btn-primary">
-                <i className="fa-solid fa-rocket"></i> Ver Meus Projetos
+                {hero.viewProjects} <i className="fa-solid fa-arrow-down-long"></i>
               </a>
               <a href="#contato" className="btn btn-secondary">
-                <i className="fa-solid fa-envelope"></i> Entrar em Contato
+                {hero.getInTouch}
               </a>
+            </div>
+
+            <div className="hero-social-links">
+              <a
+                href={`mailto:${personal.social.email}`}
+                className="social-link-btn"
+                title="Send an Email"
+                aria-label="Email"
+              >
+                <i className="fa-regular fa-envelope"></i>
+                <span className="social-link-text">{personal.social.email}</span>
+              </a>
+              <div className="social-icons-row">
+                <a
+                  href={personal.social.linkedin}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="social-icon-btn"
+                  title="LinkedIn"
+                  aria-label="LinkedIn Profile"
+                >
+                  <i className="fa-brands fa-linkedin-in"></i>
+                </a>
+                <a
+                  href={personal.social.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="social-icon-btn"
+                  title="GitHub"
+                  aria-label="GitHub Profile"
+                >
+                  <i className="fa-brands fa-github"></i>
+                </a>
+              </div>
             </div>
 
             <div className="hero-stats">
               {personal.stats.map((st, idx) => (
                 <div key={idx} className="stat-item">
-                  <h4>{st.number}</h4>
-                  <p>{st.label}</p>
+                  <span className="stat-number">{st.number}</span>
+                  <span className="stat-label">{st.label}</span>
                 </div>
               ))}
             </div>
@@ -39,23 +73,47 @@ function HeroSection({ personal }) {
 
           <div className="hero-visual">
             <div className="profile-card">
-              <div className="profile-avatar-wrapper">
-                <div className="profile-avatar">
-                  <i className="fa-solid fa-user-astronaut"></i>
-                </div>
-                <div className="avatar-badge">
-                  <i className="fa-solid fa-code"></i>
-                </div>
+              <div className="profile-image-container">
+                <img
+                  src="/profile.png"
+                  alt="Átila Mascarenhas"
+                  className="profile-photo"
+                />
               </div>
-              <h3 className="profile-name">{personal.name}</h3>
-              <p className="profile-role">{personal.title}</p>
 
-              <div className="profile-tags">
-                <span className="tech-chip">Python</span>
-                <span className="tech-chip">React</span>
-                <span className="tech-chip">Data Science</span>
-                <span className="tech-chip">C / C++</span>
-                <span className="tech-chip">Arduino</span>
+              <div className="profile-info">
+                <h2 className="profile-name">{personal.name}</h2>
+                <p className="profile-title">{personal.title}</p>
+                <p className="profile-institution">
+                  <i className="fa-solid fa-graduation-cap"></i> {personal.institution}
+                </p>
+
+                <div className="profile-chips">
+                  {hero.tags.map((tag, idx) => (
+                    <span key={idx} className="profile-chip">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+
+                <div className="profile-social-actions">
+                  <a
+                    href={personal.social.linkedin}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="profile-social-btn"
+                  >
+                    <i className="fa-brands fa-linkedin-in"></i> LinkedIn
+                  </a>
+                  <a
+                    href={personal.social.github}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="profile-social-btn"
+                  >
+                    <i className="fa-brands fa-github"></i> GitHub
+                  </a>
+                </div>
               </div>
             </div>
           </div>
@@ -66,4 +124,3 @@ function HeroSection({ personal }) {
 }
 
 export default HeroSection;
-

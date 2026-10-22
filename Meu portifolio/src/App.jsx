@@ -14,32 +14,71 @@ export default function App() {
     return localStorage.getItem("theme_preference") || "dark";
   });
 
+  const [lang, setLang] = useState(() => {
+    return localStorage.getItem("portfolio_lang") || "en";
+  });
+
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
     localStorage.setItem("theme_preference", theme);
   }, [theme]);
 
+  useEffect(() => {
+    document.documentElement.setAttribute("lang", lang === "en" ? "en" : "pt-BR");
+    localStorage.setItem("portfolio_lang", lang);
+  }, [lang]);
+
   const toggleTheme = () => {
     setTheme((prev) => (prev === "dark" ? "light" : "dark"));
   };
 
+  const toggleLang = (selectedLang) => {
+    if (selectedLang) {
+      setLang(selectedLang);
+    } else {
+      setLang((prev) => (prev === "en" ? "pt" : "en"));
+    }
+  };
+
+  const content = portfolioData[lang] || portfolioData.en;
+
   return (
     <div className="app-wrapper">
-      {/* Luzes de Fundo Ambientais */}
-      <div className="ambient-glow glow-1"></div>
-      <div className="ambient-glow glow-2"></div>
-      <div className="ambient-glow glow-3"></div>
-
-      <Navbar theme={theme} toggleTheme={toggleTheme} />
+      <Navbar
+        nav={content.nav}
+        theme={theme}
+        toggleTheme={toggleTheme}
+        lang={lang}
+        toggleLang={toggleLang}
+      />
       <main>
-        <HeroSection personal={portfolioData.personal} />
-        <AboutSection personal={portfolioData.personal} />
-        <SkillsSection skills={portfolioData.skills} />
-        <ProjectsSection projects={portfolioData.projects} />
-        <JourneySection journey={portfolioData.journey} />
-        <ContactSection personal={portfolioData.personal} />
+        <HeroSection
+          personal={content.personal}
+          hero={content.hero}
+          lang={lang}
+        />
+        <AboutSection
+          personal={content.personal}
+          about={content.about}
+        />
+        <SkillsSection
+          skillsData={content.skills}
+        />
+        <ProjectsSection
+          projectsData={content.projects}
+        />
+        <JourneySection
+          journeyData={content.journey}
+        />
+        <ContactSection
+          contact={content.contact}
+          personal={content.personal}
+        />
       </main>
-      <Footer personal={portfolioData.personal} />
+      <Footer
+        footer={content.footer}
+        personal={content.personal}
+      />
     </div>
   );
 }

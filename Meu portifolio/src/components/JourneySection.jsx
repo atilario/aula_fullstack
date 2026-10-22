@@ -1,29 +1,31 @@
-function JourneySection({ journey }) {
+function JourneySection({ journeyData }) {
   return (
-    <section id="jornada">
+    <section id="jornada" className="section-padding section-alt">
       <div className="container">
         <div className="section-header">
-          <span className="badge-tag blue">Evolução Contínua</span>
-          <h2 className="section-title">Minha <span>Jornada</span></h2>
-          <p className="section-subtitle">
-            Linha do tempo dos marcos acadêmicos e do desenvolvimento de habilidades ao longo da minha formação.
-          </p>
+          <span className="section-badge">{journeyData.badge}</span>
+          <h2 className="section-title">
+            {journeyData.title} <span>{journeyData.titleHighlight}</span>
+          </h2>
+          <p className="section-subtitle">{journeyData.subtitle}</p>
         </div>
 
-        <div className="timeline-container">
-          {journey.map((item, idx) => (
-            <div key={idx} className="timeline-item">
-              <div className="timeline-dot"></div>
-              <div className="timeline-card">
-                <div className="timeline-step">ETAPA {item.step}</div>
-                <h3>{item.title}</h3>
-                <span
-                  className="project-category-tag"
-                  style={{ marginBottom: "10px", display: "inline-block" }}
-                >
-                  {item.institution}
-                </span>
-                <p>{item.desc}</p>
+        <div className="minimal-timeline">
+          {journeyData.list.map((item, idx) => (
+            <div key={idx} className="timeline-node">
+              <div className="timeline-marker">
+                <span className="marker-dot"></span>
+                <span className="marker-line"></span>
+              </div>
+              <div className="timeline-content-card">
+                <div className="timeline-header-line">
+                  <span className="timeline-step-badge">
+                    {journeyData.stepPrefix} {item.step}
+                  </span>
+                  <span className="timeline-institution">{item.institution}</span>
+                </div>
+                <h3 className="timeline-heading">{item.title}</h3>
+                <p className="timeline-description">{item.desc}</p>
               </div>
             </div>
           ))}
@@ -34,4 +36,3 @@ function JourneySection({ journey }) {
 }
 
 export default JourneySection;
-

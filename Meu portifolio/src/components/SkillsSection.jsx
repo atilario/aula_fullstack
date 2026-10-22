@@ -1,39 +1,39 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import SkillCard from "./SkillCard";
 
-function SkillsSection({ skills }) {
-  const [selectedCategory, setSelectedCategory] = useState("Todos");
+function SkillsSection({ skillsData }) {
+  const [selectedCategory, setSelectedCategory] = useState(skillsData.all || "All");
 
-  const categories = useMemo(() => {
-    const cats = ["Todos"];
-    skills.forEach((s) => {
-      if (!cats.includes(s.category)) cats.push(s.category);
-    });
-    return cats;
-  }, [skills]);
+  // Keep selectedCategory in sync when language switches
+  useEffect(() => {
+    setSelectedCategory(skillsData.all || "All");
+  }, [skillsData.all]);
 
   const filteredSkills = useMemo(() => {
-    if (selectedCategory === "Todos") return skills;
-    return skills.filter((s) => s.category === selectedCategory);
-  }, [selectedCategory, skills]);
+    if (selectedCategory === skillsData.all) {
+      return skillsData.list;
+    }
+    return skillsData.list.filter((s) => s.category === selectedCategory);
+  }, [selectedCategory, skillsData]);
 
   return (
-    <section id="tecnologias">
+    <section id="tecnologias" className="section-padding section-alt">
       <div className="container">
         <div className="section-header">
-          <span className="badge-tag blue">Competências Técnicas</span>
-          <h2 className="section-title">Habilidades & <span>Tecnologias</span></h2>
-          <p className="section-subtitle">
-            Ferramentas, linguagens e frameworks que compõem meu conjunto de habilidades na Engenharia da Computação.
-          </p>
+          <span className="section-badge">{skillsData.badge}</span>
+          <h2 className="section-title">
+            {skillsData.title} <span>{skillsData.titleHighlight}</span>
+          </h2>
+          <p className="section-subtitle">{skillsData.subtitle}</p>
         </div>
 
-        <div className="skills-filters">
-          {categories.map((cat) => (
+        <div className="filter-pill-group">
+          {skillsData.categories.map((cat) => (
             <button
               key={cat}
-              className={`filter-btn ${selectedCategory === cat ? "active" : ""}`}
+              className={`filter-pill-btn ${selectedCategory === cat ? "active" : ""}`}
               onClick={() => setSelectedCategory(cat)}
+              type="button"
             >
               {cat}
             </button>
@@ -51,4 +51,3 @@ function SkillsSection({ skills }) {
 }
 
 export default SkillsSection;
-

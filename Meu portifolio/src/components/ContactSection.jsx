@@ -1,164 +1,143 @@
 import { useState } from "react";
 
-function ContactSection({ personal }) {
-  const [formData, setFormData] = useState({ name: "", email: "", message: "" });
-  const [submitted, setSubmitted] = useState(false);
+function ContactSection({ contact, personal }) {
+  const [copied, setCopied] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleCopyEmail = (e) => {
     e.preventDefault();
-    if (formData.name && formData.email && formData.message) {
-      setSubmitted(true);
-      setTimeout(() => {
-        setFormData({ name: "", email: "", message: "" });
-      }, 3000);
-    }
+    e.stopPropagation();
+    navigator.clipboard.writeText(personal.social.email);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2500);
   };
 
   return (
-    <section id="contato">
+    <section id="contato" className="section-padding">
       <div className="container">
         <div className="section-header">
-          <span className="badge-tag">Conecte-se</span>
-          <h2 className="section-title">Vamos <span>Conversar?</span></h2>
-          <p className="section-subtitle">
-            Interessado em colaborar em projetos, pesquisas acadêmicas ou oportunidades profissionais? Entre em contato!
-          </p>
+          <span className="section-badge">{contact.badge}</span>
+          <h2 className="section-title">
+            {contact.title} <span>{contact.titleHighlight}</span>
+          </h2>
+          <p className="section-subtitle">{contact.subtitle}</p>
         </div>
 
-        <div className="contact-grid">
-          <div className="contact-info">
-            <div>
-              <h3>Informações de Contato</h3>
-              <p>
-                Estou sempre aberto a novas conexões, parcerias de projetos e oportunidades de estágio na área de tecnologia.
-              </p>
-
-              <div className="contact-methods">
-                <a
-                  href={`mailto:${personal.social.email}`}
-                  className="contact-method-item"
-                >
-                  <div className="contact-icon">
-                    <i className="fa-solid fa-envelope"></i>
-                  </div>
-                  <div>
-                    <strong>E-mail</strong>
-                    <div style={{ color: "var(--text-muted)", fontSize: "0.88rem" }}>
-                      {personal.social.email}
-                    </div>
-                  </div>
-                </a>
-
-                <a
-                  href={personal.social.linkedin || "https://linkedin.com"}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="contact-method-item"
-                >
-                  <div className="contact-icon">
-                    <i className="fa-brands fa-linkedin-in"></i>
-                  </div>
-                  <div>
-                    <strong>LinkedIn</strong>
-                    <div style={{ color: "var(--text-muted)", fontSize: "0.88rem" }}>
-                      Perfil Profissional
-                    </div>
-                  </div>
-                </a>
-
-                <a
-                  href={personal.social.github || "https://github.com"}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="contact-method-item"
-                >
-                  <div className="contact-icon">
-                    <i className="fa-brands fa-github"></i>
-                  </div>
-                  <div>
-                    <strong>GitHub</strong>
-                    <div style={{ color: "var(--text-muted)", fontSize: "0.88rem" }}>
-                      Repositórios de Código
-                    </div>
-                  </div>
-                </a>
-              </div>
-            </div>
-
-            <div style={{ color: "var(--text-dim)", fontSize: "0.85rem" }}>
-              <i className="fa-solid fa-location-dot"></i> Salvador, Bahia • Brasil
-            </div>
+        <div className="contact-minimal-wrapper">
+          <div className="contact-intro">
+            <h3 className="contact-intro-title">{contact.infoTitle}</h3>
+            <p className="contact-intro-desc">{contact.infoDesc}</p>
           </div>
 
-          <div>
-            {submitted ? (
-              <div className="form-success-banner">
-                <i
-                  className="fa-solid fa-circle-check"
-                  style={{ fontSize: "1.3rem" }}
-                ></i>
-                <div>
-                  <strong>Mensagem registrada com sucesso!</strong>
-                  <p style={{ fontSize: "0.88rem", marginTop: "4px" }}>
-                    Obrigado pelo contato, {formData.name || "visitante"}. Em breve retornarei sua mensagem!
-                  </p>
-                </div>
+          <div className="contact-cards-grid">
+            {/* Email Card */}
+            <div className="contact-card">
+              <div className="contact-card-icon">
+                <i className="fa-regular fa-envelope"></i>
               </div>
-            ) : (
-              <form className="contact-form" onSubmit={handleSubmit}>
-                <div className="form-group">
-                  <label htmlFor="name">Seu Nome</label>
-                  <input
-                    id="name"
-                    type="text"
-                    required
-                    placeholder="Ex: Carlos Silva"
-                    className="form-input"
-                    value={formData.name}
-                    onChange={(e) =>
-                      setFormData({ ...formData, name: e.target.value })
-                    }
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label htmlFor="email">Seu E-mail</label>
-                  <input
-                    id="email"
-                    type="email"
-                    required
-                    placeholder="seuemail@dominio.com"
-                    className="form-input"
-                    value={formData.email}
-                    onChange={(e) =>
-                      setFormData({ ...formData, email: e.target.value })
-                    }
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label htmlFor="message">Sua Mensagem</label>
-                  <textarea
-                    id="message"
-                    required
-                    placeholder="Olá Átila, gostaria de conversar sobre uma oportunidade / projeto..."
-                    className="form-textarea"
-                    value={formData.message}
-                    onChange={(e) =>
-                      setFormData({ ...formData, message: e.target.value })
-                    }
-                  ></textarea>
-                </div>
-
-                <button
-                  type="submit"
-                  className="btn btn-primary"
-                  style={{ width: "100%" }}
+              <div className="contact-card-info">
+                <span className="contact-card-label">{contact.emailLabel}</span>
+                <a
+                  href={`mailto:${personal.social.email}`}
+                  className="contact-card-value"
+                  title="Send an email"
                 >
-                  <i className="fa-solid fa-paper-plane"></i> Enviar Mensagem
+                  {personal.social.email}
+                </a>
+                <p className="contact-card-desc">{contact.emailDesc}</p>
+              </div>
+              <div className="contact-card-actions">
+                <a
+                  href={`mailto:${personal.social.email}`}
+                  className="btn-contact-action primary"
+                >
+                  <i className="fa-solid fa-arrow-up-right-from-square"></i>
+                  <span>{contact.emailAction || "Send Email"}</span>
+                </a>
+                <button
+                  onClick={handleCopyEmail}
+                  className="btn-contact-action secondary"
+                  type="button"
+                  title="Copy email to clipboard"
+                >
+                  <i className={`fa-regular ${copied ? "fa-circle-check" : "fa-copy"}`}></i>
+                  <span>{copied ? contact.copied : contact.copyEmail}</span>
                 </button>
-              </form>
-            )}
+              </div>
+            </div>
+
+            {/* LinkedIn Card */}
+            <div className="contact-card">
+              <div className="contact-card-icon">
+                <i className="fa-brands fa-linkedin-in"></i>
+              </div>
+              <div className="contact-card-info">
+                <span className="contact-card-label">{contact.linkedinLabel}</span>
+                <a
+                  href={personal.social.linkedin}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="contact-card-value"
+                >
+                  linkedin.com/in/amcomp
+                </a>
+                <p className="contact-card-desc">{contact.linkedinDesc}</p>
+              </div>
+              <div className="contact-card-actions">
+                <a
+                  href={personal.social.linkedin}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn-contact-action primary"
+                >
+                  <i className="fa-solid fa-arrow-up-right-from-square"></i>
+                  <span>{contact.linkedinAction}</span>
+                </a>
+              </div>
+            </div>
+
+            {/* GitHub Card */}
+            <div className="contact-card">
+              <div className="contact-card-icon">
+                <i className="fa-brands fa-github"></i>
+              </div>
+              <div className="contact-card-info">
+                <span className="contact-card-label">{contact.githubLabel}</span>
+                <a
+                  href={personal.social.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="contact-card-value"
+                >
+                  github.com/atilario
+                </a>
+                <p className="contact-card-desc">{contact.githubDesc}</p>
+              </div>
+              <div className="contact-card-actions">
+                <a
+                  href={personal.social.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn-contact-action primary"
+                >
+                  <i className="fa-solid fa-arrow-up-right-from-square"></i>
+                  <span>{contact.githubAction}</span>
+                </a>
+              </div>
+            </div>
+
+            {/* Location Card */}
+            <div className="contact-card location-card">
+              <div className="contact-card-icon">
+                <i className="fa-solid fa-location-dot"></i>
+              </div>
+              <div className="contact-card-info">
+                <span className="contact-card-label">{contact.locationLabel}</span>
+                <span className="contact-card-value static-text">
+                  {contact.locationValue}
+                </span>
+                <p className="contact-card-desc">{contact.locationSub}</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -167,4 +146,3 @@ function ContactSection({ personal }) {
 }
 
 export default ContactSection;
-

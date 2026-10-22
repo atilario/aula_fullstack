@@ -1,64 +1,69 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import ProjectCard from "./ProjectCard";
 import ProjectModal from "./ProjectModal";
 
-function ProjectsSection({ projects }) {
-  const [filterCategory, setFilterCategory] = useState("Todos");
+function ProjectsSection({ projectsData }) {
+  const [filterCategory, setFilterCategory] = useState(projectsData.allCategory || "All");
   const [searchTerm, setSearchTerm] = useState("");
   const [activeProject, setActiveProject] = useState(null);
 
-  const categories = [
-    "Todos",
-    "Dados & IA",
-    "Full Stack & Web",
-    "Hardware & IoT",
-    "Linguagens & Sistemas"
-  ];
+  useEffect(() => {
+    setFilterCategory(projectsData.allCategory || "All");
+  }, [projectsData.allCategory]);
 
   const filteredProjects = useMemo(() => {
-    return projects.filter((p) => {
+    return projectsData.list.filter((p) => {
       const matchCategory =
-        filterCategory === "Todos" || p.category === filterCategory;
+        filterCategory === projectsData.allCategory || p.category === filterCategory;
       const matchSearch =
-        searchTerm === "" ||
+        searchTerm.trim() === "" ||
         p.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
         p.shortDesc.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        p.tags.some((tag) =>
-          tag.toLowerCase().includes(searchTerm.toLowerCase())
-        );
+        p.tags.some((tag) => tag.toLowerCase().includes(searchTerm.toLowerCase()));
       return matchCategory && matchSearch;
     });
-  }, [projects, filterCategory, searchTerm]);
+  }, [projectsData, filterCategory, searchTerm]);
 
   return (
-    <section id="projetos">
+    <section id="projetos" className="section-padding">
       <div className="container">
         <div className="section-header">
-          <span className="badge-tag">Portfólio Prático</span>
-          <h2 className="section-title">Projetos & <span>Trabalhos</span></h2>
-          <p className="section-subtitle">
-            Aplicações práticas em Ciência de Dados, Inteligência Artificial, Desenvolvimento Web e Hardware.
-          </p>
+          <span className="section-badge">{projectsData.badge}</span>
+          <h2 className="section-title">
+            {projectsData.title} <span>{projectsData.titleHighlight}</span>
+          </h2>
+          <p className="section-subtitle">{projectsData.subtitle}</p>
         </div>
 
-        <div className="projects-controls">
-          <div className="search-input-wrapper">
+        <div className="projects-toolbar">
+          <div className="search-bar-wrapper">
             <i className="fa-solid fa-magnifying-glass search-icon"></i>
             <input
               type="text"
-              className="search-input"
-              placeholder="Buscar por nome, tag ou tecnologia..."
+              className="search-input-field"
+              placeholder={projectsData.searchPlaceholder}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
+            {searchTerm && (
+              <button
+                className="clear-search-btn"
+                onClick={() => setSearchTerm("")}
+                aria-label="Clear search"
+                type="button"
+              >
+                <i className="fa-solid fa-xmark"></i>
+              </button>
+            )}
           </div>
 
-          <div className="skills-filters">
-            {categories.map((cat) => (
+          <div className="filter-pill-group">
+            {projectsData.categories.map((cat) => (
               <button
                 key={cat}
-                className={`filter-btn ${filterCategory === cat ? "active" : ""}`}
+                className={`filter-pill-btn ${filterCategory === cat ? "active" : ""}`}
                 onClick={() => setFilterCategory(cat)}
+                type="button"
               >
                 {cat}
               </button>
@@ -72,25 +77,22 @@ function ProjectsSection({ projects }) {
               key={proj.id}
               proj={proj}
               onSelect={setActiveProject}
+              viewDetailsText={projectsData.viewDetails}
             />
           ))}
         </div>
 
         {filteredProjects.length === 0 && (
-          <div
-            style={{
-              textAlign: "center",
-              padding: "40px",
-              color: "var(--text-muted)"
-            }}
-          >
-            <p>Nenhum projeto encontrado com os termos de busca informados.</p>
+          <div className="empty-projects-state">
+            <i className="fa-regular fa-folder-open empty-icon"></i>
+            <p>{projectsData.noResults}</p>
           </div>
         )}
 
         <ProjectModal
           project={activeProject}
           onClose={() => setActiveProject(null)}
+          modalHeading={projectsData.modalHeading}
         />
       </div>
     </section>
@@ -98,4 +100,3 @@ function ProjectsSection({ projects }) {
 }
 
 export default ProjectsSection;
-

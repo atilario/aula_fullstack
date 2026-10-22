@@ -1,28 +1,59 @@
-function Footer({ personal }) {
+function Footer({ footer, personal }) {
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return (
-    <footer>
+    <footer className="site-footer">
       <div className="container">
         <div className="footer-content">
-          <div className="footer-left">
-            <p>
+          <div className="footer-info">
+            <p className="footer-title">
               © {new Date().getFullYear()} <strong>{personal.name}</strong> • {personal.institution}
             </p>
-            <p style={{ fontSize: "0.8rem", marginTop: "4px" }}>
-              Engenharia da Computação • Portfólio Construído com React 18 & Design System Moderno
-            </p>
+            <p className="footer-subtitle">{footer.sub}</p>
           </div>
 
-          <div className="footer-tags">
+          <div className="footer-social-links">
+            <a
+              href={`mailto:${personal.social.email}`}
+              className="footer-icon-link"
+              title="Email"
+              aria-label="Email Átila"
+            >
+              <i className="fa-regular fa-envelope"></i>
+            </a>
+            <a
+              href={personal.social.linkedin}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="footer-icon-link"
+              title="LinkedIn"
+              aria-label="LinkedIn"
+            >
+              <i className="fa-brands fa-linkedin-in"></i>
+            </a>
+            <a
+              href={personal.social.github}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="footer-icon-link"
+              title="GitHub"
+              aria-label="GitHub"
+            >
+              <i className="fa-brands fa-github"></i>
+            </a>
+          </div>
+
+          <div className="footer-actions">
             <button
               onClick={scrollToTop}
-              className="btn btn-secondary btn-sm"
-              title="Voltar ao topo"
+              className="btn-back-to-top"
+              title={footer.backToTop}
+              type="button"
             >
-              <i className="fa-solid fa-arrow-up"></i> Topo
+              <i className="fa-solid fa-arrow-up"></i>
+              <span>{footer.backToTop}</span>
             </button>
           </div>
         </div>
@@ -32,4 +63,3 @@ function Footer({ personal }) {
 }
 
 export default Footer;
-
