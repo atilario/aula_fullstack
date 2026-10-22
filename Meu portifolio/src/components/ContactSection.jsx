@@ -1,14 +1,23 @@
 import { useState } from "react";
 
 function ContactSection({ contact, personal }) {
-  const [copied, setCopied] = useState(false);
+  const [copiedEmail, setCopiedEmail] = useState(false);
+  const [copiedPhone, setCopiedPhone] = useState(false);
 
   const handleCopyEmail = (e) => {
     e.preventDefault();
     e.stopPropagation();
     navigator.clipboard.writeText(personal.social.email);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2500);
+    setCopiedEmail(true);
+    setTimeout(() => setCopiedEmail(false), 2500);
+  };
+
+  const handleCopyPhone = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    navigator.clipboard.writeText(personal.social.phoneFormatted || personal.social.phone);
+    setCopiedPhone(true);
+    setTimeout(() => setCopiedPhone(false), 2500);
   };
 
   return (
@@ -29,7 +38,50 @@ function ContactSection({ contact, personal }) {
           </div>
 
           <div className="contact-cards-grid">
-            {/* Email Card */}
+            {/* WhatsApp & Phone Card */}
+            <div className="contact-card">
+              <div className="contact-card-icon whatsapp-icon">
+                <i className="fa-brands fa-whatsapp"></i>
+              </div>
+              <div className="contact-card-info">
+                <span className="contact-card-label">{contact.phoneLabel || "WhatsApp / Phone"}</span>
+                <a
+                  href={personal.social.whatsappUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="contact-card-value"
+                  title="Open WhatsApp"
+                >
+                  {personal.social.phoneFormatted || personal.social.phone}
+                </a>
+                <p className="contact-card-desc">
+                  {personal.social.phone} • Salvador, BA
+                </p>
+              </div>
+              <div className="contact-card-actions">
+                <a
+                  href={personal.social.whatsappUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn-contact-action whatsapp-action"
+                  title="Open in WhatsApp"
+                >
+                  <i className="fa-brands fa-whatsapp"></i>
+                  <span>{contact.phoneAction || "WhatsApp"}</span>
+                </a>
+                <button
+                  onClick={handleCopyPhone}
+                  className="btn-contact-action secondary"
+                  type="button"
+                  title="Copy phone number"
+                >
+                  <i className={`fa-regular ${copiedPhone ? "fa-circle-check" : "fa-copy"}`}></i>
+                  <span>{copiedPhone ? contact.copied : contact.copyEmail?.replace("Email", "").replace("E-mail", "") || "Copiar"}</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Email (Gmail) Card */}
             <div className="contact-card">
               <div className="contact-card-icon">
                 <i className="fa-regular fa-envelope"></i>
@@ -64,8 +116,8 @@ function ContactSection({ contact, personal }) {
                   type="button"
                   title="Copy email to clipboard"
                 >
-                  <i className={`fa-regular ${copied ? "fa-circle-check" : "fa-copy"}`}></i>
-                  <span>{copied ? contact.copied : contact.copyEmail}</span>
+                  <i className={`fa-regular ${copiedEmail ? "fa-circle-check" : "fa-copy"}`}></i>
+                  <span>{copiedEmail ? contact.copied : contact.copyEmail}</span>
                 </button>
               </div>
             </div>

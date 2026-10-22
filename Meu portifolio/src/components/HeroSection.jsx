@@ -14,13 +14,20 @@ function HeroSection({ personal, hero, lang }) {
               <span className="hero-name">{hero.name}</span>
             </h1>
 
+            <p className="hero-headline">
+              {hero.headline}
+            </p>
+
             <p className="hero-description">
               {hero.description}
             </p>
 
             <div className="hero-actions">
-              <a href="#projetos" className="btn btn-primary">
-                {hero.viewProjects} <i className="fa-solid fa-arrow-down-long"></i>
+              <a href="#experiencia" className="btn btn-primary">
+                <i className="fa-solid fa-briefcase"></i> {lang === "en" ? "View Experience" : "Ver Experiência"}
+              </a>
+              <a href="#projetos" className="btn btn-secondary">
+                {hero.viewProjects}
               </a>
               <a href="#contato" className="btn btn-secondary">
                 {hero.getInTouch}
@@ -39,26 +46,39 @@ function HeroSection({ personal, hero, lang }) {
                 <i className="fa-regular fa-envelope"></i>
                 <span className="social-link-text">{personal.social.email}</span>
               </a>
+
               <div className="social-icons-row">
                 <a
                   href={personal.social.linkedin}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="social-icon-btn"
-                  title="LinkedIn"
+                  title="LinkedIn Profile"
                   aria-label="LinkedIn Profile"
                 >
                   <i className="fa-brands fa-linkedin-in"></i>
                 </a>
+
                 <a
                   href={personal.social.github}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="social-icon-btn"
-                  title="GitHub"
+                  title="GitHub Profile"
                   aria-label="GitHub Profile"
                 >
                   <i className="fa-brands fa-github"></i>
+                </a>
+
+                <a
+                  href={personal.social.whatsappUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="social-icon-btn whatsapp-btn"
+                  title={`WhatsApp: ${personal.social.phone}`}
+                  aria-label="WhatsApp"
+                >
+                  <i className="fa-brands fa-whatsapp"></i>
                 </a>
               </div>
             </div>
@@ -114,6 +134,14 @@ function HeroSection({ personal, hero, lang }) {
                     className="profile-social-btn"
                   >
                     <i className="fa-brands fa-github"></i> GitHub
+                  </a>
+                  <a
+                    href={personal.social.whatsappUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="profile-social-btn"
+                  >
+                    <i className="fa-brands fa-whatsapp"></i> WhatsApp
                   </a>
                 </div>
               </div>

@@ -26,9 +26,10 @@ function Navbar({ nav, theme, toggleTheme, lang, toggleLang }) {
           <ul className="nav-links">
             <li><a href="#inicio" onClick={closeMenu}>{lang === "en" ? "Home" : "Início"}</a></li>
             <li><a href="#sobre" onClick={closeMenu}>{nav.about}</a></li>
+            <li><a href="#experiencia" onClick={closeMenu}>{nav.experience || (lang === "en" ? "Experience" : "Experiência")}</a></li>
             <li><a href="#tecnologias" onClick={closeMenu}>{nav.skills}</a></li>
+            <li><a href="#certificacoes" onClick={closeMenu}>{lang === "en" ? "Certs" : "Certificações"}</a></li>
             <li><a href="#projetos" onClick={closeMenu}>{nav.projects}</a></li>
-            <li><a href="#jornada" onClick={closeMenu}>{nav.journey}</a></li>
             <li><a href="#contato" onClick={closeMenu}>{nav.contact}</a></li>
           </ul>
         </nav>

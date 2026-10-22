@@ -3,9 +3,10 @@ import { portfolioData } from "./data/portfolioData";
 import Navbar from "./components/Navbar";
 import HeroSection from "./components/HeroSection";
 import AboutSection from "./components/AboutSection";
+import ExperienceSection from "./components/ExperienceSection";
 import SkillsSection from "./components/SkillsSection";
+import CertificationsSection from "./components/CertificationsSection";
 import ProjectsSection from "./components/ProjectsSection";
-import JourneySection from "./components/JourneySection";
 import ContactSection from "./components/ContactSection";
 import Footer from "./components/Footer";
 
@@ -61,14 +62,17 @@ export default function App() {
           personal={content.personal}
           about={content.about}
         />
+        <ExperienceSection
+          experience={content.experience}
+        />
         <SkillsSection
           skillsData={content.skills}
         />
+        <CertificationsSection
+          certifications={content.certifications}
+        />
         <ProjectsSection
           projectsData={content.projects}
-        />
-        <JourneySection
-          journeyData={content.journey}
         />
         <ContactSection
           contact={content.contact}
